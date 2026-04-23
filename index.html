@@ -735,10 +735,10 @@
         .matrix-plot {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            grid-template-rows: 1fr 1fr;
-            gap: 1rem;
+            grid-template-rows: auto 1fr;
+            gap: 0.75rem;
             width: 100%;
-            min-height: 400px;
+            min-height: 600px;
             margin-top: 1.5rem;
         }
 
@@ -746,7 +746,7 @@
             background: var(--primary);
             border: 2px solid var(--border);
             border-radius: 0.75rem;
-            padding: 1.5rem;
+            padding: 0;
             display: flex;
             flex-direction: column;
             overflow: hidden;
@@ -778,53 +778,70 @@
         }
 
         .matrix-quad-header {
-            font-size: 1rem;
+            font-size: 0.95rem;
             font-weight: 700;
-            margin-bottom: 0.75rem;
+            padding: 0.75rem 1rem;
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--border);
+            flex-shrink: 0;
         }
 
         .matrix-quadrant-box.do-first .matrix-quad-header {
             color: #fca5a5;
+            background: rgba(239, 68, 68, 0.1);
         }
 
         .matrix-quadrant-box.schedule .matrix-quad-header {
             color: #93c5fd;
+            background: rgba(59, 130, 246, 0.1);
         }
 
         .matrix-quadrant-box.delegate .matrix-quad-header {
             color: #fed7aa;
+            background: rgba(251, 146, 60, 0.1);
         }
 
         .matrix-quadrant-box.eliminate .matrix-quad-header {
             color: #d1d5db;
+            background: rgba(107, 114, 128, 0.1);
         }
 
-        .matrix-quad-subtitle {
-            font-size: 0.75rem;
-            color: var(--text-secondary);
-            margin-bottom: 0.75rem;
+        .matrix-quad-count {
+            font-size: 0.8rem;
+            font-weight: 600;
+            opacity: 0.7;
         }
 
         .matrix-events-container {
             display: flex;
             flex-direction: column;
-            gap: 0.5rem;
+            gap: 0;
             overflow-y: auto;
+            overflow-x: hidden;
             flex: 1;
             min-height: 0;
         }
 
         .matrix-event-card {
             background: var(--secondary);
-            padding: 0.75rem;
-            border-radius: 0.4rem;
+            padding: 0.6rem 0.8rem;
+            border-radius: 0;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.15s ease;
             border-left: 3px solid;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 0.5rem;
             min-height: 0;
+        }
+
+        .matrix-event-card:hover {
+            background: var(--primary);
+            padding-left: 0.9rem;
         }
 
         .matrix-quadrant-box.do-first .matrix-event-card {
@@ -843,42 +860,63 @@
             border-left-color: #6b7280;
         }
 
-        .matrix-event-card:hover {
-            transform: translateX(4px);
-            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+        .matrix-event-info {
+            flex: 1;
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 0.15rem;
         }
 
         .matrix-event-title {
             font-weight: 600;
-            font-size: 0.9rem;
+            font-size: 0.8rem;
             color: var(--text-primary);
-            margin-bottom: 0.25rem;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
         }
 
         .matrix-event-time {
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             color: var(--text-secondary);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .matrix-event-badge {
+            font-size: 0.65rem;
+            font-weight: 600;
+            background: var(--accent);
+            color: #fff;
+            padding: 0.2rem 0.4rem;
+            border-radius: 0.2rem;
+            flex-shrink: 0;
+            white-space: nowrap;
         }
 
         .matrix-empty-message {
             color: var(--text-secondary);
             text-align: center;
             padding: 1rem;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex: 1;
         }
 
         .matrix-legend {
             display: flex;
             gap: 1rem;
             margin-top: 1.5rem;
-            padding: 1rem;
+            padding: 0.75rem 1rem;
             background: var(--secondary);
             border-radius: 0.5rem;
             flex-wrap: wrap;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
+            justify-content: space-around;
         }
 
         .matrix-legend-item {
@@ -888,8 +926,8 @@
         }
 
         .matrix-legend-color {
-            width: 16px;
-            height: 16px;
+            width: 14px;
+            height: 14px;
             border-radius: 0.25rem;
         }
 
@@ -1091,44 +1129,54 @@
             }
 
             .matrix-plot {
-                gap: 0.75rem;
-                min-height: 350px;
+                gap: 0.6rem;
+                min-height: 400px;
             }
 
             .matrix-quadrant-box {
-                padding: 1rem;
-                min-height: 180px;
+                padding: 0;
             }
 
             .matrix-quad-header {
-                font-size: 0.9rem;
-                margin-bottom: 0.5rem;
+                font-size: 0.85rem;
+                padding: 0.6rem 0.8rem;
             }
 
-            .matrix-quad-subtitle {
-                font-size: 0.7rem;
-                margin-bottom: 0.5rem;
+            .matrix-quad-count {
+                font-size: 0.75rem;
             }
 
             .matrix-event-card {
-                padding: 0.6rem;
+                padding: 0.5rem 0.6rem;
+                gap: 0.4rem;
             }
 
             .matrix-event-title {
-                font-size: 0.8rem;
+                font-size: 0.75rem;
             }
 
             .matrix-event-time {
-                font-size: 0.7rem;
+                font-size: 0.65rem;
+            }
+
+            .matrix-event-badge {
+                font-size: 0.6rem;
+                padding: 0.15rem 0.3rem;
             }
 
             .matrix-legend {
                 gap: 0.75rem;
-                padding: 0.75rem;
+                padding: 0.6rem 0.75rem;
+                font-size: 0.75rem;
             }
 
             .matrix-legend-item {
-                font-size: 0.8rem;
+                font-size: 0.75rem;
+            }
+
+            .matrix-legend-color {
+                width: 12px;
+                height: 12px;
             }
 
             .calendar-grid {
@@ -1252,46 +1300,52 @@
             }
 
             .matrix-quadrant-box {
-                padding: 0.75rem;
-                min-height: 140px;
+                padding: 0;
             }
 
             .matrix-quad-header {
                 font-size: 0.8rem;
-                margin-bottom: 0.3rem;
+                padding: 0.5rem 0.6rem;
             }
 
-            .matrix-quad-subtitle {
-                font-size: 0.65rem;
-                margin-bottom: 0.3rem;
+            .matrix-quad-count {
+                font-size: 0.7rem;
             }
 
             .matrix-event-card {
-                padding: 0.5rem;
+                padding: 0.4rem 0.5rem;
+                gap: 0.3rem;
             }
 
             .matrix-event-title {
                 font-size: 0.7rem;
-                margin-bottom: 0.15rem;
             }
 
             .matrix-event-time {
-                font-size: 0.65rem;
+                font-size: 0.6rem;
+            }
+
+            .matrix-event-badge {
+                font-size: 0.55rem;
+                padding: 0.12rem 0.25rem;
+                min-width: 28px;
+                text-align: center;
             }
 
             .matrix-legend {
-                gap: 0.5rem;
+                gap: 0.4rem;
                 padding: 0.5rem;
-                font-size: 0.75rem;
+                font-size: 0.7rem;
+                justify-content: space-between;
             }
 
             .matrix-legend-item {
-                font-size: 0.7rem;
+                font-size: 0.65rem;
             }
 
             .matrix-legend-color {
-                width: 12px;
-                height: 12px;
+                width: 10px;
+                height: 10px;
             }
 
             .btn {
@@ -2241,43 +2295,51 @@
                 let html = `
                     <div style="margin-bottom:1.5rem;">
                         <h3 style="margin-bottom:0.5rem;">Eisenhower Matrix</h3>
-                        <p style="color:#cbd5e1; font-size:0.9rem;">Organized by urgency and importance</p>
+                        <p style="color:#cbd5e1; font-size:0.9rem;">Organized by urgency (auto-calculated) and importance (your rating)</p>
                     </div>
 
                     <div class="matrix-plot">
-                        <!-- Do First: Top Right -->
-                        <div class="matrix-quadrant-box do-first" style="grid-column:2; grid-row:1;">
-                            <div class="matrix-quad-header">🔴 Do First</div>
-                            <div class="matrix-quad-subtitle">Urgent & Important</div>
-                            <div class="matrix-events-container">
-                                ${this.renderQuadrantEvents(quadrants.doFirst)}
-                            </div>
-                        </div>
-
                         <!-- Schedule: Top Left -->
                         <div class="matrix-quadrant-box schedule" style="grid-column:1; grid-row:1;">
-                            <div class="matrix-quad-header">🔵 Schedule</div>
-                            <div class="matrix-quad-subtitle">Important & Future</div>
+                            <div class="matrix-quad-header">
+                                <span>🔵 Schedule</span>
+                                <span class="matrix-quad-count">${quadrants.schedule.length}</span>
+                            </div>
                             <div class="matrix-events-container">
                                 ${this.renderQuadrantEvents(quadrants.schedule)}
                             </div>
                         </div>
 
-                        <!-- Delegate: Bottom Right -->
-                        <div class="matrix-quadrant-box delegate" style="grid-column:2; grid-row:2;">
-                            <div class="matrix-quad-header">🟠 Delegate</div>
-                            <div class="matrix-quad-subtitle">Urgent & Low Value</div>
+                        <!-- Do First: Top Right -->
+                        <div class="matrix-quadrant-box do-first" style="grid-column:2; grid-row:1;">
+                            <div class="matrix-quad-header">
+                                <span>🔴 Do First</span>
+                                <span class="matrix-quad-count">${quadrants.doFirst.length}</span>
+                            </div>
                             <div class="matrix-events-container">
-                                ${this.renderQuadrantEvents(quadrants.delegate)}
+                                ${this.renderQuadrantEvents(quadrants.doFirst)}
                             </div>
                         </div>
 
                         <!-- Eliminate: Bottom Left -->
                         <div class="matrix-quadrant-box eliminate" style="grid-column:1; grid-row:2;">
-                            <div class="matrix-quad-header">⚪ Eliminate</div>
-                            <div class="matrix-quad-subtitle">Low Value & Future</div>
+                            <div class="matrix-quad-header">
+                                <span>⚪ Eliminate</span>
+                                <span class="matrix-quad-count">${quadrants.eliminate.length}</span>
+                            </div>
                             <div class="matrix-events-container">
                                 ${this.renderQuadrantEvents(quadrants.eliminate)}
+                            </div>
+                        </div>
+
+                        <!-- Delegate: Bottom Right -->
+                        <div class="matrix-quadrant-box delegate" style="grid-column:2; grid-row:2;">
+                            <div class="matrix-quad-header">
+                                <span>🟠 Delegate</span>
+                                <span class="matrix-quad-count">${quadrants.delegate.length}</span>
+                            </div>
+                            <div class="matrix-events-container">
+                                ${this.renderQuadrantEvents(quadrants.delegate)}
                             </div>
                         </div>
                     </div>
@@ -2285,19 +2347,19 @@
                     <div class="matrix-legend">
                         <div class="matrix-legend-item">
                             <div class="matrix-legend-color" style="background:#ef4444;"></div>
-                            <span>Do First: ${quadrants.doFirst.length}</span>
+                            <span>Do First</span>
                         </div>
                         <div class="matrix-legend-item">
                             <div class="matrix-legend-color" style="background:#3b82f6;"></div>
-                            <span>Schedule: ${quadrants.schedule.length}</span>
+                            <span>Schedule</span>
                         </div>
                         <div class="matrix-legend-item">
                             <div class="matrix-legend-color" style="background:#fb923c;"></div>
-                            <span>Delegate: ${quadrants.delegate.length}</span>
+                            <span>Delegate</span>
                         </div>
                         <div class="matrix-legend-item">
                             <div class="matrix-legend-color" style="background:#6b7280;"></div>
-                            <span>Eliminate: ${quadrants.eliminate.length}</span>
+                            <span>Eliminate</span>
                         </div>
                     </div>
                 `;
@@ -2307,15 +2369,19 @@
 
             renderQuadrantEvents(events) {
                 if (events.length === 0) {
-                    return `<div class="matrix-empty-message">✓ Clear</div>`;
+                    return `<div class="matrix-empty-message">✓ All clear</div>`;
                 }
 
                 return events.map(event => {
                     const timeStr = this.formatTimeRemaining(new Date(`${event.date}T${event.time}`) - new Date());
+                    const urgencyBadge = this.calculateUrgency(event.date, event.time);
                     return `
                         <div class="matrix-event-card" onclick="openEventDetailsModal('${event.id}')">
-                            <div class="matrix-event-title">${event.title}</div>
-                            <div class="matrix-event-time">⏱️ ${timeStr}</div>
+                            <div class="matrix-event-info">
+                                <div class="matrix-event-title">${event.title}</div>
+                                <div class="matrix-event-time">⏱️ ${timeStr}</div>
+                            </div>
+                            <div class="matrix-event-badge">${urgencyBadge}</div>
                         </div>
                     `;
                 }).join('');
