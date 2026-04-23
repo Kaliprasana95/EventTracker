@@ -735,11 +735,11 @@
         .matrix-plot {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            grid-template-rows: auto 1fr;
+            grid-template-rows: 1fr 1fr;
             gap: 0.75rem;
             width: 100%;
-            min-height: 600px;
-            margin-top: 1.5rem;
+            height: 600px;
+            margin-top: 1rem;
         }
 
         .matrix-quadrant-box {
@@ -817,58 +817,33 @@
         .matrix-events-container {
             display: flex;
             flex-direction: column;
-            gap: 0;
+            gap: 0.5rem;
             overflow-y: auto;
             overflow-x: hidden;
             flex: 1;
             min-height: 0;
+            padding: 0.75rem;
         }
 
-        .matrix-event-card {
+        .matrix-event-badge {
             background: var(--secondary);
-            padding: 0.6rem 0.8rem;
-            border-radius: 0;
+            padding: 0.6rem;
+            border-radius: 0.5rem;
             cursor: pointer;
             transition: all 0.15s ease;
             border-left: 3px solid;
-            border-bottom: 1px solid var(--border);
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 0.5rem;
+            flex-direction: column;
+            gap: 0.2rem;
             min-height: 0;
         }
 
-        .matrix-event-card:hover {
-            background: var(--primary);
-            padding-left: 0.9rem;
+        .matrix-event-badge:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
         }
 
-        .matrix-quadrant-box.do-first .matrix-event-card {
-            border-left-color: #ef4444;
-        }
-
-        .matrix-quadrant-box.schedule .matrix-event-card {
-            border-left-color: #3b82f6;
-        }
-
-        .matrix-quadrant-box.delegate .matrix-event-card {
-            border-left-color: #fb923c;
-        }
-
-        .matrix-quadrant-box.eliminate .matrix-event-card {
-            border-left-color: #6b7280;
-        }
-
-        .matrix-event-info {
-            flex: 1;
-            min-width: 0;
-            display: flex;
-            flex-direction: column;
-            gap: 0.15rem;
-        }
-
-        .matrix-event-title {
+        .matrix-event-badge-title {
             font-weight: 600;
             font-size: 0.8rem;
             color: var(--text-primary);
@@ -877,7 +852,7 @@
             white-space: nowrap;
         }
 
-        .matrix-event-time {
+        .matrix-event-badge-time {
             font-size: 0.7rem;
             color: var(--text-secondary);
             overflow: hidden;
@@ -885,38 +860,27 @@
             white-space: nowrap;
         }
 
-        .matrix-event-badge {
-            font-size: 0.65rem;
-            font-weight: 600;
-            background: var(--accent);
-            color: #fff;
-            padding: 0.2rem 0.4rem;
-            border-radius: 0.2rem;
-            flex-shrink: 0;
-            white-space: nowrap;
-        }
-
         .matrix-empty-message {
             color: var(--text-secondary);
             text-align: center;
-            padding: 1rem;
-            font-size: 0.85rem;
+            font-size: 2rem;
             display: flex;
             align-items: center;
             justify-content: center;
             flex: 1;
+            opacity: 0.5;
         }
 
         .matrix-legend {
             display: flex;
-            gap: 1rem;
-            margin-top: 1.5rem;
+            gap: 1.5rem;
+            margin-top: 1rem;
             padding: 0.75rem 1rem;
             background: var(--secondary);
             border-radius: 0.5rem;
             flex-wrap: wrap;
-            font-size: 0.8rem;
-            justify-content: space-around;
+            font-size: 0.85rem;
+            justify-content: center;
         }
 
         .matrix-legend-item {
@@ -1130,7 +1094,7 @@
 
             .matrix-plot {
                 gap: 0.6rem;
-                min-height: 400px;
+                height: 450px;
             }
 
             .matrix-quadrant-box {
@@ -1146,32 +1110,27 @@
                 font-size: 0.75rem;
             }
 
-            .matrix-event-card {
-                padding: 0.5rem 0.6rem;
+            .matrix-events-container {
+                padding: 0.6rem;
                 gap: 0.4rem;
             }
 
-            .matrix-event-title {
+            .matrix-event-badge {
+                padding: 0.5rem;
+            }
+
+            .matrix-event-badge-title {
                 font-size: 0.75rem;
             }
 
-            .matrix-event-time {
+            .matrix-event-badge-time {
                 font-size: 0.65rem;
             }
 
-            .matrix-event-badge {
-                font-size: 0.6rem;
-                padding: 0.15rem 0.3rem;
-            }
-
             .matrix-legend {
-                gap: 0.75rem;
-                padding: 0.6rem 0.75rem;
-                font-size: 0.75rem;
-            }
-
-            .matrix-legend-item {
-                font-size: 0.75rem;
+                gap: 1rem;
+                padding: 0.6rem;
+                font-size: 0.8rem;
             }
 
             .matrix-legend-color {
@@ -1296,7 +1255,7 @@
 
             .matrix-plot {
                 gap: 0.5rem;
-                min-height: 300px;
+                height: 350px;
             }
 
             .matrix-quadrant-box {
@@ -1312,35 +1271,31 @@
                 font-size: 0.7rem;
             }
 
-            .matrix-event-card {
-                padding: 0.4rem 0.5rem;
+            .matrix-events-container {
+                padding: 0.5rem;
                 gap: 0.3rem;
             }
 
-            .matrix-event-title {
+            .matrix-event-badge {
+                padding: 0.4rem;
+            }
+
+            .matrix-event-badge-title {
                 font-size: 0.7rem;
             }
 
-            .matrix-event-time {
+            .matrix-event-badge-time {
                 font-size: 0.6rem;
             }
 
-            .matrix-event-badge {
-                font-size: 0.55rem;
-                padding: 0.12rem 0.25rem;
-                min-width: 28px;
-                text-align: center;
-            }
-
             .matrix-legend {
-                gap: 0.4rem;
+                gap: 0.6rem;
                 padding: 0.5rem;
-                font-size: 0.7rem;
-                justify-content: space-between;
+                font-size: 0.75rem;
             }
 
             .matrix-legend-item {
-                font-size: 0.65rem;
+                font-size: 0.7rem;
             }
 
             .matrix-legend-color {
@@ -2293,11 +2248,6 @@
                 });
 
                 let html = `
-                    <div style="margin-bottom:1.5rem;">
-                        <h3 style="margin-bottom:0.5rem;">Eisenhower Matrix</h3>
-                        <p style="color:#cbd5e1; font-size:0.9rem;">Organized by urgency (auto-calculated) and importance (your rating)</p>
-                    </div>
-
                     <div class="matrix-plot">
                         <!-- Schedule: Top Left -->
                         <div class="matrix-quadrant-box schedule" style="grid-column:1; grid-row:1;">
@@ -2369,19 +2319,18 @@
 
             renderQuadrantEvents(events) {
                 if (events.length === 0) {
-                    return `<div class="matrix-empty-message">✓ All clear</div>`;
+                    return `<div class="matrix-empty-message">✓</div>`;
                 }
 
                 return events.map(event => {
-                    const timeStr = this.formatTimeRemaining(new Date(`${event.date}T${event.time}`) - new Date());
-                    const urgencyBadge = this.calculateUrgency(event.date, event.time);
+                    const eventTime = new Date(`${event.date}T${event.time}`);
+                    const color = this.getUrgencyColor(eventTime - new Date());
+                    const timeStr = this.formatTimeRemaining(eventTime - new Date());
+                    
                     return `
-                        <div class="matrix-event-card" onclick="openEventDetailsModal('${event.id}')">
-                            <div class="matrix-event-info">
-                                <div class="matrix-event-title">${event.title}</div>
-                                <div class="matrix-event-time">⏱️ ${timeStr}</div>
-                            </div>
-                            <div class="matrix-event-badge">${urgencyBadge}</div>
+                        <div class="matrix-event-badge" style="background:${color}80; border-left:3px solid ${color};" onclick="openEventDetailsModal('${event.id}')">
+                            <div class="matrix-event-badge-title">${event.title.substring(0, 18)}</div>
+                            <div class="matrix-event-badge-time">⏱️ ${timeStr}</div>
                         </div>
                     `;
                 }).join('');
