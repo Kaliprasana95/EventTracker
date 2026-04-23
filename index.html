@@ -752,7 +752,9 @@
             grid-template-rows: 1fr 1fr;
             gap: 0.6rem;
             width: 100%;
-            height: 700px;
+            height: auto;
+            min-height: 800px;
+            max-height: 90vh;
             margin-top: 1rem;
         }
 
@@ -830,51 +832,53 @@
 
         .matrix-events-container {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-            gap: 0.35rem;
+            grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+            gap: 0.3rem;
             overflow-y: auto;
             overflow-x: hidden;
             flex: 1;
             min-height: 0;
-            padding: 0.5rem;
+            padding: 0.4rem;
+            align-content: flex-start;
+        }
         }
 
         .matrix-event-badge {
             background: var(--secondary);
-            padding: 0.4rem;
-            border-radius: 0.4rem;
+            padding: 0.3rem;
+            border-radius: 0.3rem;
             cursor: pointer;
-            transition: all 0.15s ease;
-            border-left: 3px solid;
+            transition: all 0.1s ease;
+            border-left: 2px solid;
             display: flex;
             flex-direction: column;
-            gap: 0.15rem;
+            gap: 0.1rem;
             min-height: 0;
             overflow: hidden;
         }
 
         .matrix-event-badge:hover {
             transform: translateY(-1px);
-            box-shadow: 0 2px 8px rgba(59, 130, 246, 0.15);
+            box-shadow: 0 2px 6px rgba(59, 130, 246, 0.2);
         }
 
         .matrix-event-badge-title {
             font-weight: 600;
-            font-size: 0.7rem;
+            font-size: 0.65rem;
             color: var(--text-primary);
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
-            line-height: 1.2;
+            line-height: 1.1;
         }
 
         .matrix-event-badge-time {
-            font-size: 0.65rem;
+            font-size: 0.6rem;
             color: var(--text-secondary);
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
-            line-height: 1.1;
+            line-height: 1;
         }
 
         .matrix-empty-message {
@@ -1742,10 +1746,14 @@
                         tokenClient.requestAccessToken();
                     });
                     this.token = response.access_token;
-                    await this.loadFromDrive();
+                    
+                    // Show local data immediately
                     this.updateSyncStatus(true);
                     document.getElementById('signInBtn').style.display = 'none';
                     document.getElementById('signOutBtn').style.display = 'flex';
+                    
+                    // Load from Drive in background (don't wait for it)
+                    this.loadFromDrive().catch(err => console.error('Failed to load from Drive:', err));
                 } catch (err) {
                     console.error('Sign in failed:', err);
                     this.updateSyncStatus(false);
@@ -1991,13 +1999,21 @@
                 if (this.renderScheduled) return; // Skip if already scheduled
                 this.renderScheduled = true;
                 requestAnimationFrame(() => {
+                    // Get current active tab
+                    const activePage = document.querySelector('.nav-tab.active')?.getAttribute('data-page') || 'priority';
+                    
+                    // Only render active tab and event lists immediately
                     this.renderEventList('priority');
                     this.renderEventList('non-priority');
                     this.renderEventList('all');
                     this.renderEventList('completed');
-                    this.renderMatrix();
-                    this.renderCalendar();
-                    this.renderScheduled = false;
+                    
+                    // Defer matrix and calendar rendering to next frame for better performance
+                    requestAnimationFrame(() => {
+                        this.renderMatrix();
+                        this.renderCalendar();
+                        this.renderScheduled = false;
+                    });
                 });
             },
 
@@ -2185,6 +2201,12 @@
             },
 
             renderCalendar() {
+                // Check if calendar tab is visible
+                const calendarPage = document.getElementById('calendar-page');
+                if (!calendarPage || !calendarPage.classList.contains('active')) {
+                    return; // Skip rendering if not active
+                }
+                
                 const displayMonth = this.currentMonth || new Date();
                 const year = displayMonth.getFullYear();
                 const month = displayMonth.getMonth();
@@ -2288,6 +2310,12 @@
             },
 
             renderMatrix() {
+                // Check if matrix tab is visible
+                const matrixPage = document.getElementById('matrix-page');
+                if (!matrixPage || !matrixPage.classList.contains('active')) {
+                    return; // Skip rendering if not active
+                }
+                
                 const events = this.events.filter(e => !e.completed);
                 
                 if (events.length === 0) {
@@ -2398,18 +2426,30 @@
                     return `<div class="matrix-empty-message">✓</div>`;
                 }
 
-                return events.map(event => {
+                // Show only top 8 events in matrix, rest can be viewed via "View More"
+                const VISIBLE_EVENTS = 8;
+                const visibleEvents = events.slice(0, VISIBLE_EVENTS);
+                const hiddenCount = events.length - VISIBLE_EVENTS;
+
+                let html = visibleEvents.map(event => {
                     const eventTime = new Date(`${event.date}T${event.time}`);
                     const color = this.getUrgencyColor(eventTime - new Date());
                     const timeStr = this.formatTimeRemaining(eventTime - new Date());
                     
                     return `
                         <div class="matrix-event-badge" style="background:${color}80; border-left:3px solid ${color};" onclick="openEventDetailsModal('${event.id}')">
-                            <div class="matrix-event-badge-title">${event.title.substring(0, 18)}</div>
+                            <div class="matrix-event-badge-title">${event.title.substring(0, 16)}</div>
                             <div class="matrix-event-badge-time">⏱️ ${timeStr}</div>
                         </div>
                     `;
                 }).join('');
+
+                // Add "more" indicator if there are hidden events
+                if (hiddenCount > 0) {
+                    html += `<div style="grid-column: 1/-1; padding: 0.3rem; text-align: center; font-size: 0.7rem; color: #cbd5e1; background: rgba(0,0,0,0.2); border-radius: 0.3rem; margin-top: 0.2rem;">+${hiddenCount} more</div>`;
+                }
+
+                return html;
             }
         };
 
