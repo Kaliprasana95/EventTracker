@@ -600,6 +600,299 @@
             margin: 0;
         }
 
+        /* ════════════════════════════════════════════════════ SLIDERS */
+        .slider-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .slider-group label {
+            display: block;
+            margin-bottom: 0.75rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .slider-container {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .slider-container input[type="range"] {
+            flex: 1;
+            height: 6px;
+            border-radius: 3px;
+            background: linear-gradient(to right, #ef4444, #fb923c, #fbbf24, #10b981);
+            outline: none;
+            -webkit-appearance: none;
+            appearance: none;
+            cursor: pointer;
+        }
+
+        .slider-container input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--accent);
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(59, 130, 246, 0.4);
+            transition: all 0.2s ease;
+        }
+
+        .slider-container input[type="range"]::-webkit-slider-thumb:hover {
+            width: 24px;
+            height: 24px;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.6);
+        }
+
+        .slider-container input[type="range"]::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--accent);
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 2px 8px rgba(59, 130, 246, 0.4);
+            transition: all 0.2s ease;
+        }
+
+        .slider-container input[type="range"]::-moz-range-thumb:hover {
+            width: 24px;
+            height: 24px;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.6);
+        }
+
+        .slider-value {
+            min-width: 50px;
+            text-align: center;
+            font-weight: 700;
+            color: var(--text-primary);
+            padding: 0.5rem 0.75rem;
+            background: var(--primary);
+            border-radius: 0.4rem;
+            font-size: 0.9rem;
+        }
+
+        .slider-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-top: 0.5rem;
+        }
+
+        .eisenhower-matrix {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 1rem;
+            padding: 1rem;
+            background: var(--primary);
+            border-radius: 0.5rem;
+            border: 1px solid var(--border);
+        }
+
+        .matrix-quadrant {
+            padding: 1rem;
+            border-radius: 0.4rem;
+            text-align: center;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .matrix-quadrant.do-first {
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid #ef4444;
+            color: #fca5a5;
+        }
+
+        .matrix-quadrant.schedule {
+            background: rgba(59, 130, 246, 0.15);
+            border: 1px solid #3b82f6;
+            color: #93c5fd;
+        }
+
+        .matrix-quadrant.delegate {
+            background: rgba(251, 146, 60, 0.15);
+            border: 1px solid #fb923c;
+            color: #fed7aa;
+        }
+
+        .matrix-quadrant.eliminate {
+            background: rgba(107, 114, 128, 0.15);
+            border: 1px solid #6b7280;
+            color: #d1d5db;
+        }
+
+        /* ════════════════════════════════════════════════════ MATRIX GRID */
+        #matrixContainer {
+            width: 100%;
+            background: var(--secondary);
+            border: 1px solid var(--border);
+            border-radius: 0.75rem;
+            padding: 2rem;
+            position: relative;
+            min-height: 500px;
+        }
+
+        .matrix-plot {
+            width: 100%;
+            height: 500px;
+            position: relative;
+            border: 2px solid var(--border);
+            border-radius: 0.5rem;
+            background: var(--primary);
+            margin-top: 2rem;
+        }
+
+        .matrix-axes {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .matrix-axis-label-x {
+            position: absolute;
+            bottom: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .matrix-axis-label-y {
+            position: absolute;
+            left: -100px;
+            top: 50%;
+            transform: translateY(-50%) rotate(-90deg);
+            font-weight: 600;
+            color: var(--text-secondary);
+            white-space: nowrap;
+        }
+
+        .matrix-axis-line-x {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: var(--border);
+        }
+
+        .matrix-axis-line-y {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            width: 1px;
+            height: 100%;
+            background: var(--border);
+        }
+
+        .matrix-quadrant-label {
+            position: absolute;
+            font-weight: 600;
+            font-size: 0.85rem;
+            opacity: 0.6;
+            color: var(--text-secondary);
+        }
+
+        .matrix-quadrant-label.q1 {
+            top: 10px;
+            right: 20px;
+            color: #fca5a5;
+        }
+
+        .matrix-quadrant-label.q2 {
+            top: 10px;
+            left: 20px;
+            color: #93c5fd;
+        }
+
+        .matrix-quadrant-label.q3 {
+            bottom: 10px;
+            right: 20px;
+            color: #fed7aa;
+        }
+
+        .matrix-quadrant-label.q4 {
+            bottom: 10px;
+            left: 20px;
+            color: #d1d5db;
+        }
+
+        .matrix-event-bubble {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 0.7rem;
+            font-weight: 600;
+            padding: 0.5rem;
+            text-align: center;
+            color: #fff;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            overflow: hidden;
+        }
+
+        .matrix-event-bubble:hover {
+            transform: scale(1.3);
+            border-color: rgba(255, 255, 255, 0.8);
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.4);
+            z-index: 100;
+        }
+
+        .matrix-event-bubble-tooltip {
+            position: absolute;
+            background: var(--secondary);
+            border: 1px solid var(--border);
+            padding: 0.5rem;
+            border-radius: 0.4rem;
+            font-size: 0.75rem;
+            white-space: nowrap;
+            bottom: 70px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: none;
+            z-index: 200;
+            color: var(--text-primary);
+        }
+
+        .matrix-event-bubble:hover .matrix-event-bubble-tooltip {
+            display: block;
+        }
+
+        .matrix-info {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-top: 1rem;
+            padding: 1rem;
+            background: var(--primary);
+            border-radius: 0.4rem;
+        }
+
+        .matrix-info-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .matrix-info-label {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+        }
+
         .modal-actions {
             display: flex;
             gap: 1rem;
@@ -1104,6 +1397,7 @@
             <button class="nav-tab" data-page="non-priority" onclick="switchPage('non-priority')">📋 Non-Priority</button>
             <button class="nav-tab" data-page="all" onclick="switchPage('all')">🎯 All Events</button>
             <button class="nav-tab" data-page="completed" onclick="switchPage('completed')">✓ Done</button>
+            <button class="nav-tab" data-page="matrix" onclick="switchPage('matrix')">📊 Matrix</button>
             <button class="nav-tab" data-page="calendar" onclick="switchPage('calendar')">📆 Calendar</button>
         </div>
 
@@ -1145,6 +1439,15 @@
                 <div class="events-list" id="completed-list"></div>
             </div>
 
+            <!-- MATRIX PAGE -->
+            <div class="page" id="matrix-page" data-page="matrix">
+                <div style="margin-bottom:1.5rem;">
+                    <h2>Eisenhower Matrix 📊</h2>
+                    <p style="color:#cbd5e1; font-size:0.9rem; margin-top:0.5rem;">Organized by urgency (time remaining) and your importance rating</p>
+                </div>
+                <div id="matrixContainer"></div>
+            </div>
+
             <!-- CALENDAR PAGE -->
             <div class="page" id="calendar-page" data-page="calendar">
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem;">
@@ -1184,6 +1487,20 @@
                     <label>Notes (Optional)</label>
                     <textarea id="eventNotes" placeholder="Add notes, links, or details... (e.g., https://example.com)" style="width:100%; padding:0.75rem; border:1px solid var(--border); border-radius:0.5rem; background:var(--primary); color:var(--text-primary); font-size:0.9rem; min-height:80px; font-family:inherit; resize:vertical;"></textarea>
                 </div>
+
+                <!-- Eisenhower Matrix Slider (Importance Only) -->
+                <div class="slider-group">
+                    <label>Importance (How much does it matter?)</label>
+                    <div class="slider-container">
+                        <input type="range" id="eventImportance" min="1" max="10" value="5" oninput="updateImportanceDisplay()">
+                        <span class="slider-value" id="importanceValue">5</span>
+                    </div>
+                    <div class="slider-labels">
+                        <span>Not Important</span>
+                        <span>Very Important</span>
+                    </div>
+                </div>
+
                 <div class="modal-actions">
                     <button type="button" class="btn btn-secondary" onclick="closeEventModal()">Cancel</button>
                     <button type="submit" class="btn btn-primary">Save Event</button>
@@ -1419,7 +1736,7 @@
             },
 
             // ── EVENTS ──
-            addEvent(title, date, time, priority, notes = '') {
+            addEvent(title, date, time, priority, notes = '', importance = 5) {
                 const event = {
                     id: Date.now().toString(),
                     title,
@@ -1427,6 +1744,7 @@
                     time,
                     priority,
                     notes: notes || '',
+                    importance: parseInt(importance) || 5,
                     completed: false,
                     createdAt: new Date().toISOString()
                 };
@@ -1435,7 +1753,7 @@
                 return event;
             },
 
-            updateEvent(id, title, date, time, priority, notes = '') {
+            updateEvent(id, title, date, time, priority, notes = '', importance = 5) {
                 const event = this.events.find(e => e.id === id);
                 if (event) {
                     event.title = title;
@@ -1443,6 +1761,7 @@
                     event.time = time;
                     event.priority = priority;
                     event.notes = notes || '';
+                    event.importance = parseInt(importance) || 5;
                     this.save();
                 }
             },
@@ -1512,6 +1831,8 @@
                     this.renderEventList('priority');
                     this.renderEventList('non-priority');
                     this.renderEventList('all');
+                    this.renderEventList('completed');
+                    this.renderMatrix();
                     this.renderCalendar();
                     this.renderScheduled = false;
                 });
@@ -1716,7 +2037,15 @@
 
                 for (let day = 1; day <= daysInMonth; day++) {
                     const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-                    const dayEvents = this.events.filter(e => e.date === dateStr && !e.completed);
+                    let dayEvents = this.events.filter(e => e.date === dateStr && !e.completed);
+                    
+                    // Sort by urgency (most urgent first)
+                    dayEvents.sort((a, b) => {
+                        const timeA = new Date(`${a.date}T${a.time}`);
+                        const timeB = new Date(`${b.date}T${b.time}`);
+                        return timeA - timeB;
+                    });
+                    
                     const isToday = dateStr === today.toISOString().split('T')[0];
 
                     html += `<div class="calendar-date ${isToday ? 'today' : ''}" onclick="openDateEventsModal('${dateStr}')">
@@ -1756,7 +2085,111 @@
 
             startAutoUpdate() {
                 setInterval(() => this.renderAll(), 60000); // Update every minute
-            }
+            },
+
+            // ── EISENHOWER MATRIX ──
+            calculateUrgency(date, time) {
+                const eventTime = new Date(`${date}T${time}`);
+                const now = new Date();
+                const diff = eventTime - now;
+                const hours = diff / (1000 * 60 * 60);
+                const days = hours / 24;
+
+                // Convert to 1-10 scale
+                // < 1 hour = 10, < 1 day = 9, < 3 days = 8, < 7 days = 7, < 30 days = 5, > 30 days = 1
+                if (hours < 0) return 10; // Overdue = max urgency
+                if (hours < 1) return 10;
+                if (hours < 24) return 9;
+                if (days < 3) return 8;
+                if (days < 7) return 7;
+                if (days < 14) return 6;
+                if (days < 30) return 5;
+                if (days < 60) return 3;
+                return 1;
+            },
+
+            renderMatrix() {
+                const events = this.events.filter(e => !e.completed);
+                
+                if (events.length === 0) {
+                    document.getElementById('matrixContainer').innerHTML = `<div class="empty-state" style="padding:3rem;"><div class="empty-state-icon">✓</div><p>No events to display</p></div>`;
+                    return;
+                }
+
+                // Calculate urgency and importance for each event
+                const eventData = events.map(event => ({
+                    ...event,
+                    urgency: this.calculateUrgency(event.date, event.time),
+                    importance: event.importance || 5
+                }));
+
+                // Create plot HTML
+                let html = `
+                    <div style="margin-bottom:2rem;">
+                        <h3 style="margin-bottom:0.5rem;">Urgency vs Importance</h3>
+                        <p style="color:#cbd5e1; font-size:0.9rem;">Each bubble is an event positioned by urgency (horizontal) and importance (vertical)</p>
+                    </div>
+
+                    <div class="matrix-plot" id="matrixPlot" style="position:relative; margin-left:120px;">
+                        <div class="matrix-axes">
+                            <div class="matrix-axis-line-x"></div>
+                            <div class="matrix-axis-line-y"></div>
+                        </div>
+                        <div class="matrix-quadrant-label q1">🔴 Do First</div>
+                        <div class="matrix-quadrant-label q2">🔵 Schedule</div>
+                        <div class="matrix-quadrant-label q3">🟠 Delegate</div>
+                        <div class="matrix-quadrant-label q4">⚪ Eliminate</div>
+                        <div id="bubblesContainer" style="position:absolute; width:100%; height:100%;"></div>
+                        <div class="matrix-axis-label-y">← Less Urgent | More Urgent →</div>
+                        <div class="matrix-axis-label-x">Less Important ← | → More Important</div>
+                    </div>
+
+                    <div class="matrix-info">
+                        <div class="matrix-info-item">
+                            <span class="matrix-info-label">Total Events</span>
+                            <span>${events.length}</span>
+                        </div>
+                        <div class="matrix-info-item">
+                            <span class="matrix-info-label">Do First (High/High)</span>
+                            <span>${eventData.filter(e => e.urgency >= 7 && e.importance >= 7).length}</span>
+                        </div>
+                        <div class="matrix-info-item">
+                            <span class="matrix-info-label">Schedule (Low/High)</span>
+                            <span>${eventData.filter(e => e.urgency < 7 && e.importance >= 7).length}</span>
+                        </div>
+                        <div class="matrix-info-item">
+                            <span class="matrix-info-label">Delegate (High/Low)</span>
+                            <span>${eventData.filter(e => e.urgency >= 7 && e.importance < 7).length}</span>
+                        </div>
+                    </div>
+                `;
+
+                document.getElementById('matrixContainer').innerHTML = html;
+
+                // Now render bubbles on the plot
+                const plotDiv = document.getElementById('bubblesContainer');
+                const plotRect = plotDiv.parentElement.getBoundingClientRect();
+
+                eventData.forEach(event => {
+                    const x = (event.urgency / 10) * 100; // Convert to percentage
+                    const y = 100 - ((event.importance / 10) * 100); // Invert Y axis
+
+                    const color = this.getUrgencyColor(new Date(`${event.date}T${event.time}`) - new Date());
+
+                    const bubble = document.createElement('div');
+                    bubble.className = 'matrix-event-bubble';
+                    bubble.style.left = `calc(${x}% - 30px)`;
+                    bubble.style.top = `calc(${y}% - 30px)`;
+                    bubble.style.background = `${color}`;
+                    bubble.style.boxShadow = `0 0 10px ${color}40`;
+                    bubble.onclick = () => openEventDetailsModal(event.id);
+                    bubble.innerHTML = `
+                        <div style="font-size:0.65rem; overflow:hidden; text-overflow:ellipsis; width:100%;">${event.title.substring(0, 8)}</div>
+                        <div class="matrix-event-bubble-tooltip">${event.title}</div>
+                    `;
+                    plotDiv.appendChild(bubble);
+                });
+            },
         };
 
         // ── UI FUNCTIONS ──
@@ -1774,6 +2207,9 @@
             document.getElementById('eventDate').value = new Date().toISOString().split('T')[0];
             document.getElementById('eventTime').value = '09:00';
             document.getElementById('eventPriority').checked = false;
+            document.getElementById('eventNotes').value = '';
+            document.getElementById('eventImportance').value = 5;
+            document.getElementById('importanceValue').textContent = '5';
             document.getElementById('eventModal').classList.add('active');
         }
 
@@ -1787,6 +2223,8 @@
             document.getElementById('eventTime').value = event.time;
             document.getElementById('eventPriority').checked = event.priority;
             document.getElementById('eventNotes').value = event.notes || '';
+            document.getElementById('eventImportance').value = event.importance || 5;
+            document.getElementById('importanceValue').textContent = event.importance || 5;
             document.getElementById('eventModal').classList.add('active');
         }
 
@@ -1801,13 +2239,19 @@
             const time = document.getElementById('eventTime').value;
             const priority = document.getElementById('eventPriority').checked;
             const notes = document.getElementById('eventNotes').value;
+            const importance = document.getElementById('eventImportance').value;
 
             if (app.currentEditingId) {
-                app.updateEvent(app.currentEditingId, title, date, time, priority, notes);
+                app.updateEvent(app.currentEditingId, title, date, time, priority, notes, importance);
             } else {
-                app.addEvent(title, date, time, priority, notes);
+                app.addEvent(title, date, time, priority, notes, importance);
             }
             closeEventModal();
+        }
+
+        function updateImportanceDisplay() {
+            const importance = parseInt(document.getElementById('eventImportance').value);
+            document.getElementById('importanceValue').textContent = importance;
         }
 
         function openSettings() {
