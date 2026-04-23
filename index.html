@@ -336,10 +336,8 @@
         }
 
         .calendar-date {
-            aspect-ratio: 1;
             display: flex;
-            align-items: center;
-            justify-content: center;
+            flex-direction: column;
             border: 1px solid var(--border);
             border-radius: 0.4rem;
             cursor: pointer;
@@ -347,18 +345,21 @@
             position: relative;
             overflow: hidden;
             background: rgba(255, 255, 255, 0.02);
-            min-height: 50px;
-            font-size: 0.85rem;
+            min-height: 70px;
+            padding: 0.4rem;
+            font-size: 0.75rem;
         }
 
         .calendar-date:hover {
             background: rgba(59, 130, 246, 0.1);
             border-color: var(--accent);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
         }
 
         .calendar-date.other-month {
             color: var(--text-secondary);
             opacity: 0.5;
+            pointer-events: none;
         }
 
         .calendar-date.today {
@@ -366,13 +367,31 @@
             background: rgba(59, 130, 246, 0.15);
         }
 
-        .calendar-events-dot {
-            position: absolute;
-            bottom: 4px;
-            width: 4px;
-            height: 4px;
-            border-radius: 50%;
-            opacity: 0.7;
+        .calendar-date-number {
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.3rem;
+            min-height: 16px;
+        }
+
+        .calendar-date-events {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 0.2rem;
+            overflow-y: auto;
+        }
+
+        .calendar-event-item {
+            padding: 0.2rem 0.3rem;
+            border-radius: 0.2rem;
+            font-size: 0.65rem;
+            line-height: 1.2;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            color: #fff;
+            font-weight: 500;
         }
 
         /* ════════════════════════════════════════════════════ MODAL */
@@ -709,6 +728,10 @@
                     <input type="checkbox" id="eventPriority">
                     <label for="eventPriority" style="margin:0;">Mark as Priority</label>
                 </div>
+                <div class="form-group">
+                    <label>Notes (Optional)</label>
+                    <textarea id="eventNotes" placeholder="Add notes, links, or details... (e.g., https://example.com)" style="width:100%; padding:0.75rem; border:1px solid var(--border); border-radius:0.5rem; background:var(--primary); color:var(--text-primary); font-size:0.9rem; min-height:80px; font-family:inherit; resize:vertical;"></textarea>
+                </div>
                 <div class="modal-actions">
                     <button type="button" class="btn btn-secondary" onclick="closeEventModal()">Cancel</button>
                     <button type="submit" class="btn btn-primary">Save Event</button>
@@ -742,6 +765,40 @@
             <div class="confirmation-actions">
                 <button class="btn btn-secondary" onclick="cancelConfirmation()">Cancel</button>
                 <button class="btn btn-primary" id="confirmBtn" onclick="executeConfirmation()">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- DATE EVENTS MODAL -->
+    <div class="modal" id="dateEventsModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="dateEventsTitle">Events for Date</h2>
+                <button class="modal-close" onclick="closeDateEventsModal()">×</button>
+            </div>
+            <div id="dateEventsList" style="max-height: 400px; overflow-y: auto; margin-bottom: 1.5rem;"></div>
+            <div style="display:flex; gap:1rem;">
+                <button class="btn btn-primary" onclick="openAddEventModalForDate()" style="flex:1;">+ Add Event</button>
+                <button class="btn btn-secondary" onclick="closeDateEventsModal()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- EVENT DETAILS MODAL -->
+    <div class="modal" id="eventDetailsModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="detailsTitle">Event Details</h2>
+                <button class="modal-close" onclick="closeEventDetailsModal()">×</button>
+            </div>
+            <div style="margin-bottom:1.5rem;">
+                <div style="padding:1.5rem; background:var(--primary); border-radius:0.5rem; border-left:4px solid;" id="detailsContent"></div>
+            </div>
+            <div style="display:flex; gap:1rem; flex-wrap:wrap;">
+                <button class="btn btn-primary" onclick="editEventFromDetails()">✏️ Edit</button>
+                <button class="btn btn-primary" id="completeBtn" onclick="completeEventFromDetails()">✓ Mark Done</button>
+                <button class="btn btn-secondary" onclick="deleteEventFromDetails()">🗑️ Delete</button>
+                <button class="btn btn-secondary" onclick="closeEventDetailsModal()">Close</button>
             </div>
         </div>
     </div>
@@ -910,13 +967,14 @@
             },
 
             // ── EVENTS ──
-            addEvent(title, date, time, priority) {
+            addEvent(title, date, time, priority, notes = '') {
                 const event = {
                     id: Date.now().toString(),
                     title,
                     date,
                     time,
                     priority,
+                    notes: notes || '',
                     completed: false,
                     createdAt: new Date().toISOString()
                 };
@@ -925,13 +983,14 @@
                 return event;
             },
 
-            updateEvent(id, title, date, time, priority) {
+            updateEvent(id, title, date, time, priority, notes = '') {
                 const event = this.events.find(e => e.id === id);
                 if (event) {
                     event.title = title;
                     event.date = date;
                     event.time = time;
                     event.priority = priority;
+                    event.notes = notes || '';
                     this.save();
                 }
             },
@@ -1191,10 +1250,17 @@
                     const dayEvents = this.events.filter(e => e.date === dateStr && !e.completed);
                     const isToday = dateStr === today.toISOString().split('T')[0];
 
-                    html += `<div class="calendar-date ${isToday ? 'today' : ''}">
-                        <div style="text-align:center; width:100%; font-size:0.9rem;">
-                            <div style="font-weight:600; margin-bottom:2px;">${day}</div>
-                            ${dayEvents.length > 0 ? `<div style="font-size:0.7rem; color:#cbd5e1;">${dayEvents.length}</div>` : ''}
+                    html += `<div class="calendar-date ${isToday ? 'today' : ''}" onclick="openDateEventsModal('${dateStr}')">
+                        <div class="calendar-date-number">${day}</div>
+                        <div class="calendar-date-events">
+                            ${dayEvents.slice(0, 3).map(e => {
+                                const eventTime = new Date(`${e.date}T${e.time}`);
+                                const color = this.getUrgencyColor(eventTime - new Date());
+                                return `<div class="calendar-event-item" style="background:${color}80;">
+                                    ${e.title.substring(0, 12)}
+                                </div>`;
+                            }).join('')}
+                            ${dayEvents.length > 3 ? `<div style="color:#cbd5e1; font-size:0.6rem; padding:0.2rem;">+${dayEvents.length - 3} more</div>` : ''}
                         </div>
                     </div>`;
                 }
@@ -1251,6 +1317,7 @@
             document.getElementById('eventDate').value = event.date;
             document.getElementById('eventTime').value = event.time;
             document.getElementById('eventPriority').checked = event.priority;
+            document.getElementById('eventNotes').value = event.notes || '';
             document.getElementById('eventModal').classList.add('active');
         }
 
@@ -1264,11 +1331,12 @@
             const date = document.getElementById('eventDate').value;
             const time = document.getElementById('eventTime').value;
             const priority = document.getElementById('eventPriority').checked;
+            const notes = document.getElementById('eventNotes').value;
 
             if (app.currentEditingId) {
-                app.updateEvent(app.currentEditingId, title, date, time, priority);
+                app.updateEvent(app.currentEditingId, title, date, time, priority, notes);
             } else {
-                app.addEvent(title, date, time, priority);
+                app.addEvent(title, date, time, priority, notes);
             }
             closeEventModal();
         }
@@ -1329,6 +1397,165 @@
                 app.renderAll();
             }
             cancelConfirmation();
+        }
+
+        // ── DATE EVENTS MODAL ──
+        let selectedDateForModal = null;
+        let selectedEventForDetails = null;
+
+        // Parse notes and convert URLs to clickable links
+        function parseNotesWithLinks(text) {
+            if (!text) return '';
+            
+            // Regex to match URLs
+            const urlRegex = /(https?:\/\/[^\s]+)/g;
+            return text.replace(urlRegex, '<a href="$1" target="_blank" style="color:#3b82f6; text-decoration:underline; font-weight:500;">$1</a>')
+                      .replace(/\n/g, '<br>');
+        }
+
+        function openDateEventsModal(dateStr) {
+            selectedDateForModal = dateStr;
+            const date = new Date(dateStr);
+            const dateFormatted = date.toLocaleDateString('en-US', { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            });
+            
+            document.getElementById('dateEventsTitle').textContent = `Events for ${dateFormatted}`;
+            
+            const dayEvents = app.events.filter(e => e.date === dateStr && !e.completed)
+                .sort((a, b) => {
+                    const timeA = new Date(`${a.date}T${a.time}`);
+                    const timeB = new Date(`${b.date}T${b.time}`);
+                    return timeA - timeB;
+                });
+            
+            let eventsHtml = '';
+            if (dayEvents.length === 0) {
+                eventsHtml = '<div style="color:#cbd5e1; padding:1rem; text-align:center;">No events for this date</div>';
+            } else {
+                eventsHtml = dayEvents.map(event => {
+                    const eventTime = new Date(`${event.date}T${event.time}`);
+                    const color = app.getUrgencyColor(eventTime - new Date());
+                    const timeRemaining = app.formatTimeRemaining(eventTime - new Date());
+                    
+                    return `
+                        <div style="background:#1e293b; border:1px solid #334155; border-left:4px solid ${color}; padding:1rem; border-radius:0.5rem; margin-bottom:0.75rem; cursor:pointer; transition:all 0.2s ease;" 
+                             onmouseover="this.style.background='#1f2937'" 
+                             onmouseout="this.style.background='#1e293b'"
+                             onclick="openEventDetailsModal('${event.id}')">
+                            <div style="display:flex; justify-content:space-between; align-items:start; gap:1rem;">
+                                <div style="flex:1;">
+                                    <div style="font-weight:600; color:#f1f5f9; margin-bottom:0.5rem;">${event.title}</div>
+                                    <div style="font-size:0.9rem; color:#cbd5e1; margin-bottom:0.5rem;">
+                                        🕐 ${event.time} | ⏱️ ${timeRemaining}
+                                    </div>
+                                    ${event.priority ? '<div style="display:inline-block; background:#fb923c20; color:#fb923c; padding:0.25rem 0.75rem; border-radius:0.3rem; font-size:0.8rem;">⭐ Priority</div>' : ''}
+                                    ${event.notes ? '<div style="font-size:0.8rem; color:#cbd5e1; margin-top:0.5rem; padding-top:0.5rem; border-top:1px solid #334155;">📝 Click to see notes</div>' : ''}
+                                </div>
+                                <div style="display:flex; gap:0.5rem;" onclick="event.stopPropagation();">
+                                    <button class="event-btn" onclick="openEditEventModal('${event.id}'); closeDateEventsModal();">✏️</button>
+                                    <button class="event-btn done" onclick="app.toggleComplete('${event.id}'); openDateEventsModal('${dateStr}');">✓</button>
+                                    <button class="event-btn" onclick="app.deleteEvent('${event.id}'); openDateEventsModal('${dateStr}');">🗑️</button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+            
+            document.getElementById('dateEventsList').innerHTML = eventsHtml;
+            document.getElementById('dateEventsModal').classList.add('active');
+        }
+
+        function closeDateEventsModal() {
+            document.getElementById('dateEventsModal').classList.remove('active');
+            selectedDateForModal = null;
+        }
+
+        function openAddEventModalForDate() {
+            if (!selectedDateForModal) return;
+            
+            app.currentEditingId = null;
+            document.getElementById('modalTitle').textContent = 'Add Event';
+            document.getElementById('eventTitle').value = '';
+            document.getElementById('eventDate').value = selectedDateForModal;
+            document.getElementById('eventTime').value = '09:00';
+            document.getElementById('eventPriority').checked = false;
+            document.getElementById('eventNotes').value = '';
+            
+            closeDateEventsModal();
+            document.getElementById('eventModal').classList.add('active');
+        }
+
+        // ── EVENT DETAILS MODAL ──
+        function openEventDetailsModal(eventId) {
+            selectedEventForDetails = eventId;
+            const event = app.events.find(e => e.id === eventId);
+            if (!event) return;
+
+            document.getElementById('detailsTitle').textContent = event.title;
+            
+            const eventTime = new Date(`${event.date}T${event.time}`);
+            const timeRemaining = app.formatTimeRemaining(eventTime - new Date());
+            const color = app.getUrgencyColor(eventTime - new Date());
+
+            let detailsHtml = `
+                <div style="margin-bottom:1rem;">
+                    <div style="font-size:0.9rem; color:#cbd5e1; margin-bottom:0.75rem;">
+                        <div>📅 ${event.date} | 🕐 ${event.time}</div>
+                        <div style="margin-top:0.5rem;">⏱️ <strong>${timeRemaining}</strong></div>
+                    </div>
+                </div>
+            `;
+
+            if (event.priority) {
+                detailsHtml += `<div style="background:#fb923c20; color:#fb923c; padding:0.5rem 0.75rem; border-radius:0.3rem; margin-bottom:1rem; display:inline-block;">⭐ Priority Event</div>`;
+            }
+
+            if (event.notes) {
+                detailsHtml += `
+                    <div style="margin-top:1rem; padding-top:1rem; border-top:1px solid #334155;">
+                        <h4 style="color:#f1f5f9; margin-bottom:0.75rem;">📝 Notes:</h4>
+                        <div style="background:rgba(0,0,0,0.2); padding:1rem; border-radius:0.5rem; color:#cbd5e1; line-height:1.6;">
+                            ${parseNotesWithLinks(event.notes)}
+                        </div>
+                    </div>
+                `;
+            }
+
+            const detailsDiv = document.getElementById('detailsContent');
+            detailsDiv.innerHTML = detailsHtml;
+            detailsDiv.style.borderColor = color;
+
+            document.getElementById('eventDetailsModal').classList.add('active');
+        }
+
+        function closeEventDetailsModal() {
+            document.getElementById('eventDetailsModal').classList.remove('active');
+            selectedEventForDetails = null;
+        }
+
+        function editEventFromDetails() {
+            if (!selectedEventForDetails) return;
+            closeEventDetailsModal();
+            openEditEventModal(selectedEventForDetails);
+        }
+
+        function completeEventFromDetails() {
+            if (!selectedEventForDetails) return;
+            app.toggleComplete(selectedEventForDetails);
+            closeEventDetailsModal();
+            app.renderAll();
+        }
+
+        function deleteEventFromDetails() {
+            if (!selectedEventForDetails) return;
+            app.deleteEvent(selectedEventForDetails);
+            closeEventDetailsModal();
+            app.renderAll();
         }
 
         // ── INIT ──
