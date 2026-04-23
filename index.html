@@ -864,21 +864,21 @@
 
         .matrix-event-badge-title {
             font-weight: 600;
-            font-size: 0.75rem;
+            font-size: 0.85rem;
             color: var(--text-primary);
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
-            line-height: 1.2;
+            line-height: 1.3;
         }
 
         .matrix-event-badge-time {
-            font-size: 0.7rem;
+            font-size: 0.8rem;
             color: var(--text-secondary);
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
-            line-height: 1.1;
+            line-height: 1.2;
         }
 
         .matrix-empty-message {
@@ -1146,11 +1146,11 @@
             }
 
             .matrix-event-badge-title {
-                font-size: 0.75rem;
+                font-size: 0.82rem;
             }
 
             .matrix-event-badge-time {
-                font-size: 0.65rem;
+                font-size: 0.75rem;
             }
 
             .matrix-legend {
@@ -1313,11 +1313,11 @@
             }
 
             .matrix-event-badge-title {
-                font-size: 0.75rem;
+                font-size: 0.82rem;
             }
 
             .matrix-event-badge-time {
-                font-size: 0.65rem;
+                font-size: 0.75rem;
             }
 
             .matrix-legend {
@@ -1698,6 +1698,20 @@
                 <button class="btn btn-primary" id="completeBtn" onclick="completeEventFromDetails()">✓ Mark Done</button>
                 <button class="btn btn-secondary" onclick="deleteEventFromDetails()">🗑️ Delete</button>
                 <button class="btn btn-secondary" onclick="closeEventDetailsModal()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MATRIX EVENTS MODAL -->
+    <div class="modal" id="matrixEventsModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="matrixEventsTitle">All Events</h2>
+                <button class="modal-close" onclick="closeMatrixEventsModal()">×</button>
+            </div>
+            <div id="matrixEventsList" style="max-height: 500px; overflow-y: auto; margin-bottom: 1.5rem;"></div>
+            <div style="display:flex; gap:1rem;">
+                <button class="btn btn-secondary" onclick="closeMatrixEventsModal()" style="flex:1;">Close</button>
             </div>
         </div>
     </div>
@@ -2444,9 +2458,26 @@
                     `;
                 }).join('');
 
-                // Add "more" indicator if there are hidden events
+                // Add "more" indicator if there are hidden events - MAKE IT CLICKABLE
                 if (hiddenCount > 0) {
-                    html += `<div style="grid-column: 1/-1; padding: 0.3rem; text-align: center; font-size: 0.7rem; color: #cbd5e1; background: rgba(0,0,0,0.2); border-radius: 0.3rem; margin-top: 0.2rem;">+${hiddenCount} more</div>`;
+                    const allEvents = visibleEvents.concat(events.slice(VISIBLE_EVENTS));
+                    const eventsList = allEvents.map(e => {
+                        const eventTime = new Date(`${e.date}T${e.time}`);
+                        const color = app.getUrgencyColor(eventTime - new Date());
+                        const timeStr = app.formatTimeRemaining(eventTime - new Date());
+                        return `
+                            <div style="padding: 0.6rem; background: ${color}20; border-left: 3px solid ${color}; border-radius: 0.3rem; cursor: pointer; margin-bottom: 0.5rem;" onclick="openEventDetailsModal('${e.id}')">
+                                <div style="font-weight: 600; font-size: 0.8rem; color: #f1f5f9;">${e.title}</div>
+                                <div style="font-size: 0.7rem; color: #cbd5e1; margin-top: 0.2rem;">📅 ${e.date} | ⏱️ ${timeStr}</div>
+                            </div>
+                        `;
+                    }).join('');
+
+                    html += `
+                        <div style="grid-column: 1/-1; padding: 0.4rem; text-align: center; font-size: 0.75rem; color: #3b82f6; background: rgba(59, 130, 246, 0.2); border-radius: 0.3rem; margin-top: 0.3rem; cursor: pointer; font-weight: 600; border: 1px solid #3b82f6;" onclick="showMatrixEventsModal('${allEvents.map(e => e.id).join(',')}', '${events.length}')">
+                            +${hiddenCount} more (Total: ${events.length})
+                        </div>
+                    `;
                 }
 
                 return html;
@@ -2730,6 +2761,37 @@
             app.deleteEvent(selectedEventForDetails);
             closeEventDetailsModal();
             app.renderAll();
+        }
+
+        // ── MATRIX EVENTS MODAL ──
+        function showMatrixEventsModal(eventIds, totalCount) {
+            const ids = eventIds.split(',');
+            const events = ids.map(id => app.events.find(e => e.id === id)).filter(e => e);
+            
+            const title = document.getElementById('matrixEventsTitle');
+            title.textContent = `All Events (${totalCount} total)`;
+            
+            let eventsHtml = events.map(event => {
+                const eventTime = new Date(`${event.date}T${event.time}`);
+                const color = app.getUrgencyColor(eventTime - new Date());
+                const timeRemaining = app.formatTimeRemaining(eventTime - new Date());
+                
+                return `
+                    <div style="background:${color}20; border-left:3px solid ${color}; padding:0.75rem; border-radius:0.5rem; margin-bottom:0.75rem; cursor: pointer;" onclick="openEventDetailsModal('${event.id}'); closeMatrixEventsModal();">
+                        <div style="font-weight: 600; color: #f1f5f9; margin-bottom:0.4rem;">${event.title}</div>
+                        <div style="font-size:0.85rem; color:#cbd5e1;">📅 ${event.date} | 🕐 ${event.time}</div>
+                        <div style="font-size:0.85rem; color:#cbd5e1; margin-top:0.3rem;">⏱️ ${timeRemaining}</div>
+                        ${event.priority ? '<div style="display:inline-block; background:#fb923c20; color:#fb923c; padding:0.25rem 0.5rem; border-radius:0.3rem; font-size:0.8rem; margin-top:0.3rem;">⭐ Priority</div>' : ''}
+                    </div>
+                `;
+            }).join('');
+            
+            document.getElementById('matrixEventsList').innerHTML = eventsHtml;
+            document.getElementById('matrixEventsModal').classList.add('active');
+        }
+
+        function closeMatrixEventsModal() {
+            document.getElementById('matrixEventsModal').classList.remove('active');
         }
 
         // ── INIT ──
