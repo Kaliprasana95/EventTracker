@@ -729,168 +729,168 @@
         /* ════════════════════════════════════════════════════ MATRIX GRID */
         #matrixContainer {
             width: 100%;
-            background: var(--secondary);
-            border: 1px solid var(--border);
-            border-radius: 0.75rem;
-            padding: 2rem;
-            position: relative;
-            min-height: 500px;
+            max-width: 100%;
         }
 
         .matrix-plot {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            gap: 1rem;
             width: 100%;
-            height: 500px;
-            position: relative;
-            border: 2px solid var(--border);
-            border-radius: 0.5rem;
-            background: var(--primary);
-            margin-top: 2rem;
+            min-height: 400px;
+            margin-top: 1.5rem;
         }
 
-        .matrix-axes {
-            position: absolute;
-            width: 100%;
-            height: 100%;
+        .matrix-quadrant-box {
+            background: var(--primary);
+            border: 2px solid var(--border);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
             display: flex;
             flex-direction: column;
+            overflow: hidden;
+            position: relative;
         }
 
-        .matrix-axis-label-x {
-            position: absolute;
-            bottom: -30px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-weight: 600;
-            color: var(--text-secondary);
+        .matrix-quadrant-box.do-first {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.15), rgba(239, 68, 68, 0.05));
+            border-color: #ef4444;
+            box-shadow: inset 0 0 20px rgba(239, 68, 68, 0.1);
         }
 
-        .matrix-axis-label-y {
-            position: absolute;
-            left: -100px;
-            top: 50%;
-            transform: translateY(-50%) rotate(-90deg);
-            font-weight: 600;
-            color: var(--text-secondary);
-            white-space: nowrap;
+        .matrix-quadrant-box.schedule {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(59, 130, 246, 0.05));
+            border-color: #3b82f6;
+            box-shadow: inset 0 0 20px rgba(59, 130, 246, 0.1);
         }
 
-        .matrix-axis-line-x {
-            position: absolute;
-            top: 50%;
-            left: 0;
-            right: 0;
-            height: 1px;
-            background: var(--border);
+        .matrix-quadrant-box.delegate {
+            background: linear-gradient(135deg, rgba(251, 146, 60, 0.15), rgba(251, 146, 60, 0.05));
+            border-color: #fb923c;
+            box-shadow: inset 0 0 20px rgba(251, 146, 60, 0.1);
         }
 
-        .matrix-axis-line-y {
-            position: absolute;
-            top: 0;
-            left: 50%;
-            width: 1px;
-            height: 100%;
-            background: var(--border);
+        .matrix-quadrant-box.eliminate {
+            background: linear-gradient(135deg, rgba(107, 114, 128, 0.15), rgba(107, 114, 128, 0.05));
+            border-color: #6b7280;
+            box-shadow: inset 0 0 20px rgba(107, 114, 128, 0.1);
         }
 
-        .matrix-quadrant-label {
-            position: absolute;
-            font-weight: 600;
-            font-size: 0.85rem;
-            opacity: 0.6;
-            color: var(--text-secondary);
+        .matrix-quad-header {
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
-        .matrix-quadrant-label.q1 {
-            top: 10px;
-            right: 20px;
+        .matrix-quadrant-box.do-first .matrix-quad-header {
             color: #fca5a5;
         }
 
-        .matrix-quadrant-label.q2 {
-            top: 10px;
-            left: 20px;
+        .matrix-quadrant-box.schedule .matrix-quad-header {
             color: #93c5fd;
         }
 
-        .matrix-quadrant-label.q3 {
-            bottom: 10px;
-            right: 20px;
+        .matrix-quadrant-box.delegate .matrix-quad-header {
             color: #fed7aa;
         }
 
-        .matrix-quadrant-label.q4 {
-            bottom: 10px;
-            left: 20px;
+        .matrix-quadrant-box.eliminate .matrix-quad-header {
             color: #d1d5db;
         }
 
-        .matrix-event-bubble {
-            position: absolute;
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
+        .matrix-quad-subtitle {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.75rem;
+        }
+
+        .matrix-events-container {
             display: flex;
             flex-direction: column;
-            align-items: center;
-            justify-content: center;
+            gap: 0.5rem;
+            overflow-y: auto;
+            flex: 1;
+            min-height: 0;
+        }
+
+        .matrix-event-card {
+            background: var(--secondary);
+            padding: 0.75rem;
+            border-radius: 0.4rem;
             cursor: pointer;
             transition: all 0.2s ease;
-            font-size: 0.7rem;
+            border-left: 3px solid;
+            min-height: 0;
+        }
+
+        .matrix-quadrant-box.do-first .matrix-event-card {
+            border-left-color: #ef4444;
+        }
+
+        .matrix-quadrant-box.schedule .matrix-event-card {
+            border-left-color: #3b82f6;
+        }
+
+        .matrix-quadrant-box.delegate .matrix-event-card {
+            border-left-color: #fb923c;
+        }
+
+        .matrix-quadrant-box.eliminate .matrix-event-card {
+            border-left-color: #6b7280;
+        }
+
+        .matrix-event-card:hover {
+            transform: translateX(4px);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+        }
+
+        .matrix-event-title {
             font-weight: 600;
-            padding: 0.5rem;
-            text-align: center;
-            color: #fff;
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            overflow: hidden;
-        }
-
-        .matrix-event-bubble:hover {
-            transform: scale(1.3);
-            border-color: rgba(255, 255, 255, 0.8);
-            box-shadow: 0 0 20px rgba(59, 130, 246, 0.4);
-            z-index: 100;
-        }
-
-        .matrix-event-bubble-tooltip {
-            position: absolute;
-            background: var(--secondary);
-            border: 1px solid var(--border);
-            padding: 0.5rem;
-            border-radius: 0.4rem;
-            font-size: 0.75rem;
-            white-space: nowrap;
-            bottom: 70px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: none;
-            z-index: 200;
-            color: var(--text-primary);
-        }
-
-        .matrix-event-bubble:hover .matrix-event-bubble-tooltip {
-            display: block;
-        }
-
-        .matrix-info {
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-            margin-top: 1rem;
-            padding: 1rem;
-            background: var(--primary);
-            border-radius: 0.4rem;
-        }
-
-        .matrix-info-item {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .matrix-info-label {
-            font-weight: 600;
+            font-size: 0.9rem;
             color: var(--text-primary);
             margin-bottom: 0.25rem;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .matrix-event-time {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        .matrix-empty-message {
+            color: var(--text-secondary);
+            text-align: center;
+            padding: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .matrix-legend {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background: var(--secondary);
+            border-radius: 0.5rem;
+            flex-wrap: wrap;
+            font-size: 0.85rem;
+        }
+
+        .matrix-legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .matrix-legend-color {
+            width: 16px;
+            height: 16px;
+            border-radius: 0.25rem;
         }
 
         .modal-actions {
@@ -1090,6 +1090,47 @@
                 word-break: break-word;
             }
 
+            .matrix-plot {
+                gap: 0.75rem;
+                min-height: 350px;
+            }
+
+            .matrix-quadrant-box {
+                padding: 1rem;
+                min-height: 180px;
+            }
+
+            .matrix-quad-header {
+                font-size: 0.9rem;
+                margin-bottom: 0.5rem;
+            }
+
+            .matrix-quad-subtitle {
+                font-size: 0.7rem;
+                margin-bottom: 0.5rem;
+            }
+
+            .matrix-event-card {
+                padding: 0.6rem;
+            }
+
+            .matrix-event-title {
+                font-size: 0.8rem;
+            }
+
+            .matrix-event-time {
+                font-size: 0.7rem;
+            }
+
+            .matrix-legend {
+                gap: 0.75rem;
+                padding: 0.75rem;
+            }
+
+            .matrix-legend-item {
+                font-size: 0.8rem;
+            }
+
             .calendar-grid {
                 gap: 0.15rem;
             }
@@ -1203,6 +1244,54 @@
 
             .header-controls {
                 gap: 0.4rem;
+            }
+
+            .matrix-plot {
+                gap: 0.5rem;
+                min-height: 300px;
+            }
+
+            .matrix-quadrant-box {
+                padding: 0.75rem;
+                min-height: 140px;
+            }
+
+            .matrix-quad-header {
+                font-size: 0.8rem;
+                margin-bottom: 0.3rem;
+            }
+
+            .matrix-quad-subtitle {
+                font-size: 0.65rem;
+                margin-bottom: 0.3rem;
+            }
+
+            .matrix-event-card {
+                padding: 0.5rem;
+            }
+
+            .matrix-event-title {
+                font-size: 0.7rem;
+                margin-bottom: 0.15rem;
+            }
+
+            .matrix-event-time {
+                font-size: 0.65rem;
+            }
+
+            .matrix-legend {
+                gap: 0.5rem;
+                padding: 0.5rem;
+                font-size: 0.75rem;
+            }
+
+            .matrix-legend-item {
+                font-size: 0.7rem;
+            }
+
+            .matrix-legend-color {
+                width: 12px;
+                height: 12px;
             }
 
             .btn {
@@ -1845,10 +1934,15 @@
                 else if (type === 'all') events = events.filter(e => !e.completed);
                 else if (type === 'completed') events = events.filter(e => e.completed);
 
+                // Sort by time remaining (least time first = most urgent)
                 events.sort((a, b) => {
                     const timeA = new Date(`${a.date}T${a.time}`);
                     const timeB = new Date(`${b.date}T${b.time}`);
-                    return timeB - timeA; // Reverse for completed (newest first)
+                    if (type === 'completed') {
+                        return timeB - timeA; // Reverse for completed (newest first)
+                    } else {
+                        return timeA - timeB; // Ascending for active events (soonest first)
+                    }
                 });
 
                 const listId = `${type}-list`;
@@ -2116,80 +2210,116 @@
                     return;
                 }
 
-                // Calculate urgency and importance for each event
-                const eventData = events.map(event => ({
-                    ...event,
-                    urgency: this.calculateUrgency(event.date, event.time),
-                    importance: event.importance || 5
-                }));
+                // Calculate urgency and categorize
+                const quadrants = {
+                    doFirst: [],      // Urgent (7+) & Important (7+)
+                    schedule: [],     // Not Urgent (<7) & Important (7+)
+                    delegate: [],     // Urgent (7+) & Not Important (<7)
+                    eliminate: []     // Not Urgent (<7) & Not Important (<7)
+                };
 
-                // Create plot HTML
+                events.forEach(event => {
+                    const urgency = this.calculateUrgency(event.date, event.time);
+                    const importance = event.importance || 5;
+
+                    if (urgency >= 7 && importance >= 7) {
+                        quadrants.doFirst.push({ ...event, urgency, importance });
+                    } else if (urgency < 7 && importance >= 7) {
+                        quadrants.schedule.push({ ...event, urgency, importance });
+                    } else if (urgency >= 7 && importance < 7) {
+                        quadrants.delegate.push({ ...event, urgency, importance });
+                    } else {
+                        quadrants.eliminate.push({ ...event, urgency, importance });
+                    }
+                });
+
+                // Sort each by urgency descending
+                Object.keys(quadrants).forEach(key => {
+                    quadrants[key].sort((a, b) => b.urgency - a.urgency);
+                });
+
                 let html = `
-                    <div style="margin-bottom:2rem;">
-                        <h3 style="margin-bottom:0.5rem;">Urgency vs Importance</h3>
-                        <p style="color:#cbd5e1; font-size:0.9rem;">Each bubble is an event positioned by urgency (horizontal) and importance (vertical)</p>
+                    <div style="margin-bottom:1.5rem;">
+                        <h3 style="margin-bottom:0.5rem;">Eisenhower Matrix</h3>
+                        <p style="color:#cbd5e1; font-size:0.9rem;">Organized by urgency and importance</p>
                     </div>
 
-                    <div class="matrix-plot" id="matrixPlot" style="position:relative; margin-left:120px;">
-                        <div class="matrix-axes">
-                            <div class="matrix-axis-line-x"></div>
-                            <div class="matrix-axis-line-y"></div>
+                    <div class="matrix-plot">
+                        <!-- Do First: Top Right -->
+                        <div class="matrix-quadrant-box do-first" style="grid-column:2; grid-row:1;">
+                            <div class="matrix-quad-header">🔴 Do First</div>
+                            <div class="matrix-quad-subtitle">Urgent & Important</div>
+                            <div class="matrix-events-container">
+                                ${this.renderQuadrantEvents(quadrants.doFirst)}
+                            </div>
                         </div>
-                        <div class="matrix-quadrant-label q1">🔴 Do First</div>
-                        <div class="matrix-quadrant-label q2">🔵 Schedule</div>
-                        <div class="matrix-quadrant-label q3">🟠 Delegate</div>
-                        <div class="matrix-quadrant-label q4">⚪ Eliminate</div>
-                        <div id="bubblesContainer" style="position:absolute; width:100%; height:100%;"></div>
-                        <div class="matrix-axis-label-y">← Less Urgent | More Urgent →</div>
-                        <div class="matrix-axis-label-x">Less Important ← | → More Important</div>
+
+                        <!-- Schedule: Top Left -->
+                        <div class="matrix-quadrant-box schedule" style="grid-column:1; grid-row:1;">
+                            <div class="matrix-quad-header">🔵 Schedule</div>
+                            <div class="matrix-quad-subtitle">Important & Future</div>
+                            <div class="matrix-events-container">
+                                ${this.renderQuadrantEvents(quadrants.schedule)}
+                            </div>
+                        </div>
+
+                        <!-- Delegate: Bottom Right -->
+                        <div class="matrix-quadrant-box delegate" style="grid-column:2; grid-row:2;">
+                            <div class="matrix-quad-header">🟠 Delegate</div>
+                            <div class="matrix-quad-subtitle">Urgent & Low Value</div>
+                            <div class="matrix-events-container">
+                                ${this.renderQuadrantEvents(quadrants.delegate)}
+                            </div>
+                        </div>
+
+                        <!-- Eliminate: Bottom Left -->
+                        <div class="matrix-quadrant-box eliminate" style="grid-column:1; grid-row:2;">
+                            <div class="matrix-quad-header">⚪ Eliminate</div>
+                            <div class="matrix-quad-subtitle">Low Value & Future</div>
+                            <div class="matrix-events-container">
+                                ${this.renderQuadrantEvents(quadrants.eliminate)}
+                            </div>
+                        </div>
                     </div>
 
-                    <div class="matrix-info">
-                        <div class="matrix-info-item">
-                            <span class="matrix-info-label">Total Events</span>
-                            <span>${events.length}</span>
+                    <div class="matrix-legend">
+                        <div class="matrix-legend-item">
+                            <div class="matrix-legend-color" style="background:#ef4444;"></div>
+                            <span>Do First: ${quadrants.doFirst.length}</span>
                         </div>
-                        <div class="matrix-info-item">
-                            <span class="matrix-info-label">Do First (High/High)</span>
-                            <span>${eventData.filter(e => e.urgency >= 7 && e.importance >= 7).length}</span>
+                        <div class="matrix-legend-item">
+                            <div class="matrix-legend-color" style="background:#3b82f6;"></div>
+                            <span>Schedule: ${quadrants.schedule.length}</span>
                         </div>
-                        <div class="matrix-info-item">
-                            <span class="matrix-info-label">Schedule (Low/High)</span>
-                            <span>${eventData.filter(e => e.urgency < 7 && e.importance >= 7).length}</span>
+                        <div class="matrix-legend-item">
+                            <div class="matrix-legend-color" style="background:#fb923c;"></div>
+                            <span>Delegate: ${quadrants.delegate.length}</span>
                         </div>
-                        <div class="matrix-info-item">
-                            <span class="matrix-info-label">Delegate (High/Low)</span>
-                            <span>${eventData.filter(e => e.urgency >= 7 && e.importance < 7).length}</span>
+                        <div class="matrix-legend-item">
+                            <div class="matrix-legend-color" style="background:#6b7280;"></div>
+                            <span>Eliminate: ${quadrants.eliminate.length}</span>
                         </div>
                     </div>
                 `;
 
                 document.getElementById('matrixContainer').innerHTML = html;
-
-                // Now render bubbles on the plot
-                const plotDiv = document.getElementById('bubblesContainer');
-                const plotRect = plotDiv.parentElement.getBoundingClientRect();
-
-                eventData.forEach(event => {
-                    const x = (event.urgency / 10) * 100; // Convert to percentage
-                    const y = 100 - ((event.importance / 10) * 100); // Invert Y axis
-
-                    const color = this.getUrgencyColor(new Date(`${event.date}T${event.time}`) - new Date());
-
-                    const bubble = document.createElement('div');
-                    bubble.className = 'matrix-event-bubble';
-                    bubble.style.left = `calc(${x}% - 30px)`;
-                    bubble.style.top = `calc(${y}% - 30px)`;
-                    bubble.style.background = `${color}`;
-                    bubble.style.boxShadow = `0 0 10px ${color}40`;
-                    bubble.onclick = () => openEventDetailsModal(event.id);
-                    bubble.innerHTML = `
-                        <div style="font-size:0.65rem; overflow:hidden; text-overflow:ellipsis; width:100%;">${event.title.substring(0, 8)}</div>
-                        <div class="matrix-event-bubble-tooltip">${event.title}</div>
-                    `;
-                    plotDiv.appendChild(bubble);
-                });
             },
+
+            renderQuadrantEvents(events) {
+                if (events.length === 0) {
+                    return `<div class="matrix-empty-message">✓ Clear</div>`;
+                }
+
+                return events.map(event => {
+                    const timeStr = this.formatTimeRemaining(new Date(`${event.date}T${event.time}`) - new Date());
+                    return `
+                        <div class="matrix-event-card" onclick="openEventDetailsModal('${event.id}')">
+                            <div class="matrix-event-title">${event.title}</div>
+                            <div class="matrix-event-time">⏱️ ${timeStr}</div>
+                        </div>
+                    `;
+                }).join('');
+            }
         };
 
         // ── UI FUNCTIONS ──
