@@ -1011,22 +1011,22 @@
 
         /* ════════════════════════════════════════════════════ RESPONSIVE */
         /* ════════════════════════════════════════════════════ DASHBOARD GRID */
-        #dashboard-page > div:nth-child(2) {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1.5rem;
-            width: 100%;
+        #dashboard-grid {
+            display: grid !important;
+            grid-template-columns: 1fr 1fr !important;
+            gap: 1.5rem !important;
+            width: 100% !important;
         }
 
-        #dashboard-page > div:nth-child(2) > div {
+        #dashboard-grid > div {
             width: 100%;
             min-width: 0;
         }
 
         @media (max-width: 768px) {
-            #dashboard-page > div:nth-child(2) {
-                grid-template-columns: 1fr;
-                gap: 1.5rem;
+            #dashboard-grid {
+                grid-template-columns: 1fr !important;
+                gap: 1.5rem !important;
             }
         }
 
@@ -1616,7 +1616,7 @@
             <!-- DASHBOARD PAGE (Matrix + Calendar) -->
             <div class="page" id="dashboard-page" data-page="dashboard">
                 <h2 style="margin-bottom:0.8rem;">Dashboard</h2>
-                <div style="display:grid; grid-template-columns:1fr; gap:1.5rem; width:100%;">
+                <div id="dashboard-grid" style="display:grid; gap:1.5rem; width:100%;">
                     <!-- MATRIX SECTION -->
                     <div style="width:100%;">
                         <div style="margin-bottom:1rem;">
@@ -2548,8 +2548,8 @@
             document.getElementById(`${page}-page`).classList.add('active');
             document.querySelector(`[data-page="${page}"]`).classList.add('active');
             
-            // Render the page if it's calendar or matrix (they have deferred rendering)
-            if (page === 'calendar' || page === 'matrix') {
+            // Render the page if it's dashboard or specific pages that need deferred rendering
+            if (page === 'dashboard' || page === 'calendar' || page === 'matrix') {
                 app.renderAll();
             }
         }
