@@ -67,6 +67,23 @@
             background-clip: text;
             word-break: break-word;
             min-width: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .app-logo {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            border-radius: 0.5rem;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: white;
+            flex-shrink: 0;
         }
 
         .header-controls {
@@ -86,6 +103,22 @@
 
         .sync-status.connected {
             color: var(--success);
+        }
+
+        .status-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .status-indicator.online {
+            background: var(--success);
+            box-shadow: 0 0 8px var(--success);
+        }
+
+        .status-indicator.offline {
+            background: #6b7280;
         }
 
         .btn {
@@ -1529,15 +1562,17 @@
     <div class="app-container">
         <!-- HEADER -->
         <div class="header">
-            <h1>📅 Event Tracker</h1>
+            <h1>
+                <div class="app-logo">✓</div>
+                <span>Event Tracker</span>
+            </h1>
             <div class="header-controls">
-                <div class="sync-status" id="syncStatus">
-                    <span id="syncDot">●</span>
-                    <span id="syncText">Not signed in</span>
+                <div class="sync-status" id="syncStatus" title="Sync status" style="min-width: fit-content;">
+                    <span class="status-indicator offline" id="syncDot"></span>
                 </div>
-                <button class="btn btn-primary" id="signInBtn" onclick="app.signIn()">Sign in with Google</button>
-                <button class="btn btn-secondary" id="signOutBtn" onclick="app.signOut()" style="display:none;">Sign Out</button>
-                <button class="btn btn-secondary" onclick="openSettings()">⚙️ Settings</button>
+                <button class="btn btn-secondary btn-small" id="signInBtn" onclick="app.signIn()" title="Sign in">🔐</button>
+                <button class="btn btn-secondary btn-small" id="signOutBtn" onclick="app.signOut()" style="display:none;" title="Sign out">👤</button>
+                <button class="btn btn-secondary btn-small" onclick="openSettings()" title="Settings">⚙️</button>
             </div>
         </div>
 
@@ -1800,15 +1835,21 @@
             updateSyncStatus(connected) {
                 const status = document.getElementById('syncStatus');
                 const dot = document.getElementById('syncDot');
-                const text = document.getElementById('syncText');
+                const signInBtn = document.getElementById('signInBtn');
+                const signOutBtn = document.getElementById('signOutBtn');
+                
                 if (connected) {
-                    dot.style.color = '#10b981';
-                    text.textContent = 'Synced with Drive';
-                    status.classList.add('connected');
+                    dot.classList.remove('offline');
+                    dot.classList.add('online');
+                    status.title = 'Synced with Drive';
+                    signInBtn.style.display = 'none';
+                    signOutBtn.style.display = 'flex';
                 } else {
-                    dot.style.color = '#94a3b8';
-                    text.textContent = 'Not signed in';
-                    status.classList.remove('connected');
+                    dot.classList.remove('online');
+                    dot.classList.add('offline');
+                    status.title = 'Not signed in';
+                    signInBtn.style.display = 'flex';
+                    signOutBtn.style.display = 'none';
                 }
             },
 
@@ -2118,7 +2159,7 @@
                             </div>
                         </div>
                         <div class="event-actions" onclick="event.stopPropagation();">
-                            ${isCompleted ? `<button class="event-btn done" onclick="app.toggleComplete('${event.id}'); app.renderAll();" style="flex:1; background:#10b98120; color:#10b981;">↩️ Undo</button>` : `<div style="font-size:0.75rem; color:#64748b;">Click to edit</div>`}
+                            ${isCompleted ? `<button class="event-btn done" onclick="app.toggleComplete('${event.id}'); app.renderAll();" style="flex:1; background:#10b98120; color:#10b981;">↩️ Undo</button>` : ''}
                         </div>
                     </div>
                 `;
@@ -2683,7 +2724,6 @@
                                     </div>
                                 </div>
                             </div>
-                            <div style="font-size:0.7rem; color:#64748b; margin-top:0.25rem;">Click to edit/delete</div>
                         </div>
                     `;
                 }).join('');
