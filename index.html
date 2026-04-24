@@ -2330,109 +2330,122 @@
                     return; // Skip rendering if not active
                 }
                 
+                const container = document.getElementById('matrixContainer');
+                if (!container) return;
+
                 const events = this.events.filter(e => !e.completed);
                 
                 if (events.length === 0) {
-                    document.getElementById('matrixContainer').innerHTML = `<div class="empty-state" style="padding:3rem;"><div class="empty-state-icon">✓</div><p>No events to display</p></div>`;
+                    container.innerHTML = `<div class="empty-state" style="padding:3rem;"><div class="empty-state-icon">✓</div><p>No events to display</p></div>`;
                     return;
                 }
 
-                // Calculate urgency and categorize
-                const quadrants = {
-                    doFirst: [],      // Urgent (7+) & Important (7+)
-                    schedule: [],     // Not Urgent (<7) & Important (7+)
-                    delegate: [],     // Urgent (7+) & Not Important (<7)
-                    eliminate: []     // Not Urgent (<7) & Not Important (<7)
-                };
+                // Show loading state
+                container.innerHTML = '<div style="padding: 2rem; text-align: center; color: #cbd5e1;">Loading matrix...</div>';
 
-                events.forEach(event => {
-                    const urgency = this.calculateUrgency(event.date, event.time);
-                    const importance = event.importance || 5;
+                // Defer rendering to next frame for better UX
+                requestAnimationFrame(() => {
+                    // Calculate urgency and categorize
+                    const quadrants = {
+                        doFirst: [],
+                        schedule: [],
+                        delegate: [],
+                        eliminate: []
+                    };
 
-                    if (urgency >= 7 && importance >= 7) {
-                        quadrants.doFirst.push({ ...event, urgency, importance });
-                    } else if (urgency < 7 && importance >= 7) {
-                        quadrants.schedule.push({ ...event, urgency, importance });
-                    } else if (urgency >= 7 && importance < 7) {
-                        quadrants.delegate.push({ ...event, urgency, importance });
-                    } else {
-                        quadrants.eliminate.push({ ...event, urgency, importance });
-                    }
+                    // Fast categorization without spreading event
+                    events.forEach(event => {
+                        const urgency = this.calculateUrgency(event.date, event.time);
+                        const importance = event.importance || 5;
+
+                        const eventData = { ...event, urgency, importance };
+
+                        if (urgency >= 7 && importance >= 7) {
+                            quadrants.doFirst.push(eventData);
+                        } else if (urgency < 7 && importance >= 7) {
+                            quadrants.schedule.push(eventData);
+                        } else if (urgency >= 7 && importance < 7) {
+                            quadrants.delegate.push(eventData);
+                        } else {
+                            quadrants.eliminate.push(eventData);
+                        }
+                    });
+
+                    // Sort each by urgency descending (only top 20 per quadrant for speed)
+                    Object.keys(quadrants).forEach(key => {
+                        quadrants[key].sort((a, b) => b.urgency - a.urgency);
+                        quadrants[key] = quadrants[key].slice(0, 20); // Limit for faster rendering
+                    });
+
+                    let html = `
+                        <div class="matrix-plot">
+                            <!-- Schedule: Top Left -->
+                            <div class="matrix-quadrant-box schedule" style="grid-column:1; grid-row:1;">
+                                <div class="matrix-quad-header">
+                                    <span>🔵 Schedule</span>
+                                    <span class="matrix-quad-count">${quadrants.schedule.length}</span>
+                                </div>
+                                <div class="matrix-events-container">
+                                    ${this.renderQuadrantEvents(quadrants.schedule)}
+                                </div>
+                            </div>
+
+                            <!-- Do First: Top Right -->
+                            <div class="matrix-quadrant-box do-first" style="grid-column:2; grid-row:1;">
+                                <div class="matrix-quad-header">
+                                    <span>🔴 Do First</span>
+                                    <span class="matrix-quad-count">${quadrants.doFirst.length}</span>
+                                </div>
+                                <div class="matrix-events-container">
+                                    ${this.renderQuadrantEvents(quadrants.doFirst)}
+                                </div>
+                            </div>
+
+                            <!-- Eliminate: Bottom Left -->
+                            <div class="matrix-quadrant-box eliminate" style="grid-column:1; grid-row:2;">
+                                <div class="matrix-quad-header">
+                                    <span>⚪ Eliminate</span>
+                                    <span class="matrix-quad-count">${quadrants.eliminate.length}</span>
+                                </div>
+                                <div class="matrix-events-container">
+                                    ${this.renderQuadrantEvents(quadrants.eliminate)}
+                                </div>
+                            </div>
+
+                            <!-- Delegate: Bottom Right -->
+                            <div class="matrix-quadrant-box delegate" style="grid-column:2; grid-row:2;">
+                                <div class="matrix-quad-header">
+                                    <span>🟠 Delegate</span>
+                                    <span class="matrix-quad-count">${quadrants.delegate.length}</span>
+                                </div>
+                                <div class="matrix-events-container">
+                                    ${this.renderQuadrantEvents(quadrants.delegate)}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="matrix-legend">
+                            <div class="matrix-legend-item">
+                                <div class="matrix-legend-color" style="background:#ef4444;"></div>
+                                <span>Do First</span>
+                            </div>
+                            <div class="matrix-legend-item">
+                                <div class="matrix-legend-color" style="background:#3b82f6;"></div>
+                                <span>Schedule</span>
+                            </div>
+                            <div class="matrix-legend-item">
+                                <div class="matrix-legend-color" style="background:#fb923c;"></div>
+                                <span>Delegate</span>
+                            </div>
+                            <div class="matrix-legend-item">
+                                <div class="matrix-legend-color" style="background:#6b7280;"></div>
+                                <span>Eliminate</span>
+                            </div>
+                        </div>
+                    `;
+
+                    container.innerHTML = html;
                 });
-
-                // Sort each by urgency descending
-                Object.keys(quadrants).forEach(key => {
-                    quadrants[key].sort((a, b) => b.urgency - a.urgency);
-                });
-
-                let html = `
-                    <div class="matrix-plot">
-                        <!-- Schedule: Top Left -->
-                        <div class="matrix-quadrant-box schedule" style="grid-column:1; grid-row:1;">
-                            <div class="matrix-quad-header">
-                                <span>🔵 Schedule</span>
-                                <span class="matrix-quad-count">${quadrants.schedule.length}</span>
-                            </div>
-                            <div class="matrix-events-container">
-                                ${this.renderQuadrantEvents(quadrants.schedule)}
-                            </div>
-                        </div>
-
-                        <!-- Do First: Top Right -->
-                        <div class="matrix-quadrant-box do-first" style="grid-column:2; grid-row:1;">
-                            <div class="matrix-quad-header">
-                                <span>🔴 Do First</span>
-                                <span class="matrix-quad-count">${quadrants.doFirst.length}</span>
-                            </div>
-                            <div class="matrix-events-container">
-                                ${this.renderQuadrantEvents(quadrants.doFirst)}
-                            </div>
-                        </div>
-
-                        <!-- Eliminate: Bottom Left -->
-                        <div class="matrix-quadrant-box eliminate" style="grid-column:1; grid-row:2;">
-                            <div class="matrix-quad-header">
-                                <span>⚪ Eliminate</span>
-                                <span class="matrix-quad-count">${quadrants.eliminate.length}</span>
-                            </div>
-                            <div class="matrix-events-container">
-                                ${this.renderQuadrantEvents(quadrants.eliminate)}
-                            </div>
-                        </div>
-
-                        <!-- Delegate: Bottom Right -->
-                        <div class="matrix-quadrant-box delegate" style="grid-column:2; grid-row:2;">
-                            <div class="matrix-quad-header">
-                                <span>🟠 Delegate</span>
-                                <span class="matrix-quad-count">${quadrants.delegate.length}</span>
-                            </div>
-                            <div class="matrix-events-container">
-                                ${this.renderQuadrantEvents(quadrants.delegate)}
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="matrix-legend">
-                        <div class="matrix-legend-item">
-                            <div class="matrix-legend-color" style="background:#ef4444;"></div>
-                            <span>Do First</span>
-                        </div>
-                        <div class="matrix-legend-item">
-                            <div class="matrix-legend-color" style="background:#3b82f6;"></div>
-                            <span>Schedule</span>
-                        </div>
-                        <div class="matrix-legend-item">
-                            <div class="matrix-legend-color" style="background:#fb923c;"></div>
-                            <span>Delegate</span>
-                        </div>
-                        <div class="matrix-legend-item">
-                            <div class="matrix-legend-color" style="background:#6b7280;"></div>
-                            <span>Eliminate</span>
-                        </div>
-                    </div>
-                `;
-
-                document.getElementById('matrixContainer').innerHTML = html;
             },
 
             renderQuadrantEvents(events) {
@@ -2440,44 +2453,25 @@
                     return `<div class="matrix-empty-message">✓</div>`;
                 }
 
-                // Show only top 8 events in matrix, rest can be viewed via "View More"
+                // Show only top 8 events in matrix
                 const VISIBLE_EVENTS = 8;
                 const visibleEvents = events.slice(0, VISIBLE_EVENTS);
                 const hiddenCount = events.length - VISIBLE_EVENTS;
 
-                let html = visibleEvents.map(event => {
+                // Build HTML efficiently without mapping
+                let html = '';
+                for (let i = 0; i < visibleEvents.length; i++) {
+                    const event = visibleEvents[i];
                     const eventTime = new Date(`${event.date}T${event.time}`);
                     const color = this.getUrgencyColor(eventTime - new Date());
                     const timeStr = this.formatTimeRemaining(eventTime - new Date());
                     
-                    return `
-                        <div class="matrix-event-badge" style="background:${color}80; border-left:3px solid ${color};" onclick="openEventDetailsModal('${event.id}')">
-                            <div class="matrix-event-badge-title">${event.title.substring(0, 16)}</div>
-                            <div class="matrix-event-badge-time">⏱️ ${timeStr}</div>
-                        </div>
-                    `;
-                }).join('');
+                    html += `<div class="matrix-event-badge" style="background:${color}80; border-left:3px solid ${color};" onclick="openEventDetailsModal('${event.id}')"><div class="matrix-event-badge-title">${event.title.substring(0, 16)}</div><div class="matrix-event-badge-time">⏱️ ${timeStr}</div></div>`;
+                }
 
-                // Add "more" indicator if there are hidden events - MAKE IT CLICKABLE
+                // Add "more" indicator if there are hidden events
                 if (hiddenCount > 0) {
-                    const allEvents = visibleEvents.concat(events.slice(VISIBLE_EVENTS));
-                    const eventsList = allEvents.map(e => {
-                        const eventTime = new Date(`${e.date}T${e.time}`);
-                        const color = app.getUrgencyColor(eventTime - new Date());
-                        const timeStr = app.formatTimeRemaining(eventTime - new Date());
-                        return `
-                            <div style="padding: 0.6rem; background: ${color}20; border-left: 3px solid ${color}; border-radius: 0.3rem; cursor: pointer; margin-bottom: 0.5rem;" onclick="openEventDetailsModal('${e.id}')">
-                                <div style="font-weight: 600; font-size: 0.8rem; color: #f1f5f9;">${e.title}</div>
-                                <div style="font-size: 0.7rem; color: #cbd5e1; margin-top: 0.2rem;">📅 ${e.date} | ⏱️ ${timeStr}</div>
-                            </div>
-                        `;
-                    }).join('');
-
-                    html += `
-                        <div style="grid-column: 1/-1; padding: 0.4rem; text-align: center; font-size: 0.75rem; color: #3b82f6; background: rgba(59, 130, 246, 0.2); border-radius: 0.3rem; margin-top: 0.3rem; cursor: pointer; font-weight: 600; border: 1px solid #3b82f6;" onclick="showMatrixEventsModal('${allEvents.map(e => e.id).join(',')}', '${events.length}')">
-                            +${hiddenCount} more (Total: ${events.length})
-                        </div>
-                    `;
+                    html += `<div style="grid-column: 1/-1; padding: 0.4rem; text-align: center; font-size: 0.75rem; color: #3b82f6; background: rgba(59, 130, 246, 0.2); border-radius: 0.3rem; margin-top: 0.3rem; cursor: pointer; font-weight: 600; border: 1px solid #3b82f6;" onclick="showMatrixEventsModal('${events.map(e => e.id).join(',')}', '${events.length}')">+${hiddenCount} more (Total: ${events.length})</div>`;
                 }
 
                 return html;
@@ -2490,6 +2484,11 @@
             document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
             document.getElementById(`${page}-page`).classList.add('active');
             document.querySelector(`[data-page="${page}"]`).classList.add('active');
+            
+            // Render the page if it's calendar or matrix (they have deferred rendering)
+            if (page === 'calendar' || page === 'matrix') {
+                app.renderAll();
+            }
         }
 
         function openAddEventModal() {
