@@ -1,11 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Event Tracker - Real-time Urgency</title>
-    <script src="https://accounts.google.com/gsi/client"></script>
-    <style>
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Event Tracker - Real-time Urgency</title><script src="https://accounts.google.com/gsi/client"></script><style>
         * {
             margin: 0;
             padding: 0;
@@ -127,7 +120,7 @@
             border-radius: 0.5rem;
             font-size: 0.9rem;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.15s ease;
             font-weight: 600;
             display: flex;
             align-items: center;
@@ -176,7 +169,7 @@
             cursor: pointer;
             font-size: 0.95rem;
             font-weight: 600;
-            transition: all 0.3s ease;
+            transition: all 0.15s ease;
             position: relative;
             white-space: nowrap;
         }
@@ -261,7 +254,7 @@
             justify-content: space-between;
             gap: 0.4rem;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.1s ease;
             border-left: 4px solid;
             position: relative;
             overflow: hidden;
@@ -340,7 +333,7 @@
             border-radius: 0.3rem;
             padding: 0.4rem 0.6rem;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.1s ease;
             color: var(--text-primary);
             font-size: 0.75rem;
             font-weight: 600;
@@ -440,7 +433,7 @@
             border: 1px solid var(--border);
             border-radius: 0.3rem;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.1s ease;
             position: relative;
             overflow: hidden;
             background: rgba(255, 255, 255, 0.02);
@@ -494,7 +487,7 @@
             color: #fff;
             font-weight: 500;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.1s ease;
             display: flex;
             align-items: center;
             gap: 0.15rem;
@@ -685,7 +678,7 @@
             background: var(--accent);
             cursor: pointer;
             box-shadow: 0 2px 8px rgba(59, 130, 246, 0.4);
-            transition: all 0.2s ease;
+            transition: all 0.1s ease;
         }
 
         .slider-container input[type="range"]::-webkit-slider-thumb:hover {
@@ -702,7 +695,7 @@
             cursor: pointer;
             border: none;
             box-shadow: 0 2px 8px rgba(59, 130, 246, 0.4);
-            transition: all 0.2s ease;
+            transition: all 0.1s ease;
         }
 
         .slider-container input[type="range"]::-moz-range-thumb:hover {
@@ -977,7 +970,7 @@
             border-radius: 0.5rem;
             padding: 1rem;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.1s ease;
             text-align: center;
         }
 
@@ -1556,218 +1549,7 @@
                 line-height: 1.1;
             }
         }
-    </style>
-</head>
-<body>
-    <div class="app-container">
-        <!-- HEADER -->
-        <div class="header">
-            <h1>
-                <div class="app-logo">✓</div>
-                <span>Event Tracker</span>
-            </h1>
-            <div class="header-controls">
-                <button class="btn btn-secondary btn-small" onclick="app.renderAll()" title="Refresh">🔄</button>
-                <div class="sync-status" id="syncStatus" title="Sync status" style="min-width: fit-content;">
-                    <span class="status-indicator offline" id="syncDot"></span>
-                </div>
-                <button class="btn btn-secondary btn-small" id="signInBtn" onclick="app.signIn()" title="Sign in">🔐</button>
-                <button class="btn btn-secondary btn-small" id="signOutBtn" onclick="app.signOut()" style="display:none;" title="Sign out">👤</button>
-                <button class="btn btn-secondary btn-small" onclick="openSettings()" title="Settings">⚙️</button>
-            </div>
-        </div>
-
-        <!-- NAV TABS -->
-        <div class="nav-tabs">
-            <button class="nav-tab active" data-page="priority" onclick="switchPage('priority')">⭐ Priority</button>
-            <button class="nav-tab" data-page="all" onclick="switchPage('all')">🎯 All Events</button>
-            <button class="nav-tab" data-page="completed" onclick="switchPage('completed')">✓ Done</button>
-            <button class="nav-tab" data-page="dashboard" onclick="switchPage('dashboard')">📊 Dashboard</button>
-        </div>
-
-        <!-- CONTENT -->
-        <div class="content">
-            <!-- PRIORITY PAGE -->
-            <div class="page active" id="priority-page" data-page="priority">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem;">
-                    <h2>Priority Events</h2>
-                    <button class="btn btn-primary" onclick="openAddEventModal()">+ Add Event</button>
-                </div>
-                <div class="events-list" id="priority-list"></div>
-            </div>
-
-            <!-- ALL EVENTS PAGE -->
-            <div class="page" id="all-page" data-page="all">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem;">
-                    <h2>All Events</h2>
-                    <button class="btn btn-primary" onclick="openAddEventModal()">+ Add Event</button>
-                </div>
-                <div class="events-list" id="all-list"></div>
-            </div>
-
-            <!-- COMPLETED PAGE -->
-            <div class="page" id="completed-page" data-page="completed">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem;">
-                    <h2>Completed Events ✓</h2>
-                    <button class="btn btn-secondary" onclick="app.clearCompleted()" style="color:#10b981;">Clear All</button>
-                </div>
-                <div class="events-list" id="completed-list"></div>
-            </div>
-
-            <!-- DASHBOARD PAGE (Matrix + Calendar) -->
-            <div class="page" id="dashboard-page" data-page="dashboard">
-                <h2 style="margin-bottom:0.8rem;">Dashboard</h2>
-                <div id="dashboard-grid" style="display:grid; gap:1.5rem; width:100%;">
-                    <!-- MATRIX SECTION -->
-                    <div style="width:100%;">
-                        <div style="margin-bottom:1rem;">
-                            <h3 style="color:#f1f5f9; font-size:1.1rem; margin-bottom:0.3rem;">Eisenhower Matrix 📊</h3>
-                            <p style="color:#cbd5e1; font-size:0.85rem; margin:0;">Organized by urgency (time remaining) and your importance rating</p>
-                        </div>
-                        <div id="matrixContainer"></div>
-                    </div>
-
-                    <!-- CALENDAR SECTION -->
-                    <div style="width:100%;">
-                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem; gap:0.75rem;">
-                            <h3 style="color:#f1f5f9; font-size:1.1rem; margin:0;">Calendar View 📆</h3>
-                            <button class="btn btn-primary btn-small" onclick="openAddEventModal()">+ Add Event</button>
-                        </div>
-                        <div class="calendar-container" id="calendar-container"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- MODAL: Add/Edit Event -->
-    <div class="modal" id="eventModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 id="modalTitle">Add Event</h2>
-                <button class="modal-close" onclick="closeEventModal()">×</button>
-            </div>
-            <form onsubmit="saveEvent(event)">
-                <div class="form-group">
-                    <label>Event Title</label>
-                    <input type="text" id="eventTitle" required placeholder="e.g., Submit Report">
-                </div>
-                <div class="form-group">
-                    <label>Date</label>
-                    <input type="date" id="eventDate" required>
-                </div>
-                <div class="form-group">
-                    <label>Time</label>
-                    <input type="time" id="eventTime" required>
-                </div>
-                <div class="form-group checkbox-group">
-                    <input type="checkbox" id="eventPriority">
-                    <label for="eventPriority" style="margin:0;">Mark as Priority</label>
-                </div>
-                <div class="form-group">
-                    <label>Notes (Optional)</label>
-                    <textarea id="eventNotes" placeholder="Add notes, links, or details... (e.g., https://example.com)" style="width:100%; padding:0.75rem; border:1px solid var(--border); border-radius:0.5rem; background:var(--primary); color:var(--text-primary); font-size:0.9rem; min-height:80px; font-family:inherit; resize:vertical;"></textarea>
-                </div>
-
-                <!-- Eisenhower Matrix Slider (Importance Only) -->
-                <div class="slider-group">
-                    <label>Importance (How much does it matter?)</label>
-                    <div class="slider-container">
-                        <input type="range" id="eventImportance" min="1" max="10" value="5" oninput="updateImportanceDisplay()">
-                        <span class="slider-value" id="importanceValue">5</span>
-                    </div>
-                    <div class="slider-labels">
-                        <span>Not Important</span>
-                        <span>Very Important</span>
-                    </div>
-                </div>
-
-                <div class="modal-actions">
-                    <button type="button" class="btn btn-secondary" onclick="closeEventModal()">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Save Event</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- MODAL: Settings -->
-    <div class="modal" id="settingsModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>Settings</h2>
-                <button class="modal-close" onclick="closeSettings()">×</button>
-            </div>
-            <div class="form-group">
-                <label>Color Scheme</label>
-                <div class="color-palette-grid" id="paletteGrid"></div>
-            </div>
-            <div class="modal-actions">
-                <button type="button" class="btn btn-primary" onclick="closeSettings()">Done</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- CONFIRMATION MODAL -->
-    <div class="confirmation-modal" id="confirmationModal">
-        <div class="confirmation-content">
-            <h3 id="confirmTitle">Confirm Action</h3>
-            <p id="confirmMessage">Are you sure?</p>
-            <div class="confirmation-actions">
-                <button class="btn btn-secondary" onclick="cancelConfirmation()">Cancel</button>
-                <button class="btn btn-primary" id="confirmBtn" onclick="executeConfirmation()">Confirm</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- DATE EVENTS MODAL -->
-    <div class="modal" id="dateEventsModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 id="dateEventsTitle">Events for Date</h2>
-                <button class="modal-close" onclick="closeDateEventsModal()">×</button>
-            </div>
-            <div id="dateEventsList" style="max-height: 400px; overflow-y: auto; margin-bottom: 1.5rem;"></div>
-            <div style="display:flex; gap:1rem;">
-                <button class="btn btn-primary" onclick="openAddEventModalForDate()" style="flex:1;">+ Add Event</button>
-                <button class="btn btn-secondary" onclick="closeDateEventsModal()">Close</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- EVENT DETAILS MODAL -->
-    <div class="modal" id="eventDetailsModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 id="detailsTitle">Event Details</h2>
-                <button class="modal-close" onclick="closeEventDetailsModal()">×</button>
-            </div>
-            <div style="margin-bottom:1.5rem;">
-                <div style="padding:1.5rem; background:var(--primary); border-radius:0.5rem; border-left:4px solid;" id="detailsContent"></div>
-            </div>
-            <div style="display:flex; gap:1rem; flex-wrap:wrap;">
-                <button class="btn btn-primary" onclick="editEventFromDetails()">✏️ Edit</button>
-                <button class="btn btn-primary" id="completeBtn" onclick="completeEventFromDetails()">✓ Mark Done</button>
-                <button class="btn btn-secondary" onclick="deleteEventFromDetails()">🗑️ Delete</button>
-                <button class="btn btn-secondary" onclick="closeEventDetailsModal()">Close</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- MATRIX EVENTS MODAL -->
-    <div class="modal" id="matrixEventsModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 id="matrixEventsTitle">All Events</h2>
-                <button class="modal-close" onclick="closeMatrixEventsModal()">×</button>
-            </div>
-            <div id="matrixEventsList" style="max-height: 500px; overflow-y: auto; margin-bottom: 1.5rem;"></div>
-            <div style="display:flex; gap:1rem;">
-                <button class="btn btn-secondary" onclick="closeMatrixEventsModal()" style="flex:1;">Close</button>
-            </div>
-        </div>
-    </div>
-
-    <script>
+    </style><link rel="preconnect" href="https://accounts.google.com"><link rel="dns-prefetch" href="https://accounts.google.com"></head><body><div class="app-container"><div class="header"><h1><div class="app-logo">✓</div><span>Event Tracker</span></h1><div class="header-controls"><button class="btn btn-secondary btn-small" onclick="app.renderAll()" title="Refresh">🔄</button><div class="sync-status" id="syncStatus" title="Sync status" style="min-width: fit-content;"><span class="status-indicator offline" id="syncDot"></span></div><button class="btn btn-secondary btn-small" id="signInBtn" onclick="app.signIn()" title="Sign in">🔐</button><button class="btn btn-secondary btn-small" id="signOutBtn" onclick="app.signOut()" style="display:none;" title="Sign out">👤</button><button class="btn btn-secondary btn-small" onclick="openSettings()" title="Settings">⚙️</button></div></div><div class="nav-tabs"><button class="nav-tab active" data-page="priority" onclick="switchPage('priority')">⭐ Priority</button><button class="nav-tab" data-page="all" onclick="switchPage('all')">🎯 All Events</button><button class="nav-tab" data-page="completed" onclick="switchPage('completed')">✓ Done</button><button class="nav-tab" data-page="dashboard" onclick="switchPage('dashboard')">📊 Dashboard</button></div><div class="content"><div class="page active" id="priority-page" data-page="priority"><div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem;"><h2>Priority Events</h2><button class="btn btn-primary" onclick="openAddEventModal()">+ Add Event</button></div><div class="events-list" id="priority-list"></div></div><div class="page" id="all-page" data-page="all"><div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem;"><h2>All Events</h2><button class="btn btn-primary" onclick="openAddEventModal()">+ Add Event</button></div><div class="events-list" id="all-list"></div></div><div class="page" id="completed-page" data-page="completed"><div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem;"><h2>Completed Events ✓</h2><button class="btn btn-secondary" onclick="app.clearCompleted()" style="color:#10b981;">Clear All</button></div><div class="events-list" id="completed-list"></div></div><div class="page" id="dashboard-page" data-page="dashboard"><h2 style="margin-bottom:0.8rem;">Dashboard</h2><div id="dashboard-grid" style="display:grid; gap:1.5rem; width:100%;"><div style="width:100%;"><div style="margin-bottom:1rem;"><h3 style="color:#f1f5f9; font-size:1.1rem; margin-bottom:0.3rem;">Eisenhower Matrix 📊</h3><p style="color:#cbd5e1; font-size:0.85rem; margin:0;">Organized by urgency (time remaining) and your importance rating</p></div><div id="matrixContainer"></div></div><div style="width:100%;"><div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem; gap:0.75rem;"><h3 style="color:#f1f5f9; font-size:1.1rem; margin:0;">Calendar View 📆</h3><button class="btn btn-primary btn-small" onclick="openAddEventModal()">+ Add Event</button></div><div class="calendar-container" id="calendar-container"></div></div></div></div></div></div><div class="modal" id="eventModal"><div class="modal-content"><div class="modal-header"><h2 id="modalTitle">Add Event</h2><button class="modal-close" onclick="closeEventModal()">×</button></div><form onsubmit="saveEvent(event)"><div class="form-group"><label>Event Title</label><input type="text" id="eventTitle" required placeholder="e.g., Submit Report"></div><div class="form-group"><label>Date</label><input type="date" id="eventDate" required></div><div class="form-group"><label>Time</label><input type="time" id="eventTime" required></div><div class="form-group checkbox-group"><input type="checkbox" id="eventPriority"><label for="eventPriority" style="margin:0;">Mark as Priority</label></div><div class="form-group"><label>Notes (Optional)</label><textarea id="eventNotes" placeholder="Add notes, links, or details... (e.g., https://example.com)" style="width:100%; padding:0.75rem; border:1px solid var(--border); border-radius:0.5rem; background:var(--primary); color:var(--text-primary); font-size:0.9rem; min-height:80px; font-family:inherit; resize:vertical;"></textarea></div><div class="slider-group"><label>Importance (How much does it matter?)</label><div class="slider-container"><input type="range" id="eventImportance" min="1" max="10" value="5" oninput="updateImportanceDisplay()"><span class="slider-value" id="importanceValue">5</span></div><div class="slider-labels"><span>Not Important</span><span>Very Important</span></div></div><div class="modal-actions"><button type="button" class="btn btn-secondary" onclick="closeEventModal()">Cancel</button><button type="submit" class="btn btn-primary">Save Event</button></div></form></div></div><div class="modal" id="settingsModal"><div class="modal-content"><div class="modal-header"><h2>Settings</h2><button class="modal-close" onclick="closeSettings()">×</button></div><div class="form-group"><label>Color Scheme</label><div class="color-palette-grid" id="paletteGrid"></div></div><div class="modal-actions"><button type="button" class="btn btn-primary" onclick="closeSettings()">Done</button></div></div></div><div class="confirmation-modal" id="confirmationModal"><div class="confirmation-content"><h3 id="confirmTitle">Confirm Action</h3><p id="confirmMessage">Are you sure?</p><div class="confirmation-actions"><button class="btn btn-secondary" onclick="cancelConfirmation()">Cancel</button><button class="btn btn-primary" id="confirmBtn" onclick="executeConfirmation()">Confirm</button></div></div></div><div class="modal" id="dateEventsModal"><div class="modal-content"><div class="modal-header"><h2 id="dateEventsTitle">Events for Date</h2><button class="modal-close" onclick="closeDateEventsModal()">×</button></div><div id="dateEventsList" style="max-height: 400px; overflow-y: auto; margin-bottom: 1.5rem;"></div><div style="display:flex; gap:1rem;"><button class="btn btn-primary" onclick="openAddEventModalForDate()" style="flex:1;">+ Add Event</button><button class="btn btn-secondary" onclick="closeDateEventsModal()">Close</button></div></div></div><div class="modal" id="eventDetailsModal"><div class="modal-content"><div class="modal-header"><h2 id="detailsTitle">Event Details</h2><button class="modal-close" onclick="closeEventDetailsModal()">×</button></div><div style="margin-bottom:1.5rem;"><div style="padding:1.5rem; background:var(--primary); border-radius:0.5rem; border-left:4px solid;" id="detailsContent"></div></div><div style="display:flex; gap:1rem; flex-wrap:wrap;"><button class="btn btn-primary" onclick="editEventFromDetails()">✏️ Edit</button><button class="btn btn-primary" id="completeBtn" onclick="completeEventFromDetails()">✓ Mark Done</button><button class="btn btn-secondary" onclick="deleteEventFromDetails()">🗑️ Delete</button><button class="btn btn-secondary" onclick="closeEventDetailsModal()">Close</button></div></div></div><div class="modal" id="matrixEventsModal"><div class="modal-content"><div class="modal-header"><h2 id="matrixEventsTitle">All Events</h2><button class="modal-close" onclick="closeMatrixEventsModal()">×</button></div><div id="matrixEventsList" style="max-height: 500px; overflow-y: auto; margin-bottom: 1.5rem;"></div><div style="display:flex; gap:1rem;"><button class="btn btn-secondary" onclick="closeMatrixEventsModal()" style="flex:1;">Close</button></div></div></div><script>
         const CLIENT_ID = '381628681298-v8rvvd8l9ao64fba2gutn9gb70fqicsl.apps.googleusercontent.com';
         const SCOPES = 'https://www.googleapis.com/auth/drive.file';
         const FILENAME = 'event_tracker_data.json';
@@ -1811,12 +1593,12 @@
                         tokenClient.requestAccessToken();
                     });
                     this.token = response.access_token;
-                    
+
                     // Show local data immediately
                     this.updateSyncStatus(true);
                     document.getElementById('signInBtn').style.display = 'none';
                     document.getElementById('signOutBtn').style.display = 'flex';
-                    
+
                     // Load from Drive in background (don't wait for it)
                     this.loadFromDrive().catch(err => console.error('Failed to load from Drive:', err));
                 } catch (err) {
@@ -1838,7 +1620,7 @@
                 const dot = document.getElementById('syncDot');
                 const signInBtn = document.getElementById('signInBtn');
                 const signOutBtn = document.getElementById('signOutBtn');
-                
+
                 if (connected) {
                     dot.classList.remove('offline');
                     dot.classList.add('online');
@@ -2043,16 +1825,16 @@
                 const EVENTS_PER_PAGE = 20;
                 const nextPage = events.slice(offset, offset + EVENTS_PER_PAGE);
                 let html = list.innerHTML.replace(/<div style="grid-column:.*?Load.*?more events<\/button><\/div>/s, '');
-                
+
                 // Add new events
                 html += nextPage.map(event => this.createEventCardHTML(event, type === 'completed')).join('');
-                
+
                 // Add button if more exist
                 if (events.length > offset + EVENTS_PER_PAGE) {
                     const remaining = events.length - (offset + EVENTS_PER_PAGE);
                     html += `<div style="grid-column:1/-1; text-align:center; padding:1rem;"><button class="btn btn-secondary" onclick="app.showMoreEvents('${type}', ${offset + EVENTS_PER_PAGE})">Load ${remaining} more events</button></div>`;
                 }
-                
+
                 list.innerHTML = html;
             },
 
@@ -2072,12 +1854,12 @@
                 requestAnimationFrame(() => {
                     // Get current active tab
                     const activePage = document.querySelector('.nav-tab.active')?.getAttribute('data-page') || 'priority';
-                    
+
                     // Only render active tab and event lists immediately
                     this.renderEventList('priority');
                     this.renderEventList('all');
                     this.renderEventList('completed');
-                    
+
                     // Defer matrix and calendar rendering to next frame for better performance
                     requestAnimationFrame(() => {
                         this.renderMatrix();
@@ -2118,13 +1900,13 @@
                 const EVENTS_PER_PAGE = 20;
                 const firstPage = events.slice(0, EVENTS_PER_PAGE);
                 let html = firstPage.map(event => this.createEventCardHTML(event, type === 'completed')).join('');
-                
+
                 // Add "show more" button if needed
                 if (events.length > EVENTS_PER_PAGE) {
                     const remaining = events.length - EVENTS_PER_PAGE;
                     html += `<div style="grid-column:1/-1; text-align:center; padding:1rem;"><button class="btn btn-secondary" onclick="app.showMoreEvents('${type}', ${EVENTS_PER_PAGE})">Load ${remaining} more events</button></div>`;
                 }
-                
+
                 list.innerHTML = html;
             },
 
@@ -2149,20 +1931,12 @@
                 }
 
                 return `
-                    <div class="event-card" style="background:${color}40; border-color:${color}; ${isCompleted ? 'opacity:0.7;' : ''}" onclick="openEventDetailsModal('${event.id}')">
-                        <div class="event-content">
-                            <div class="event-title">${event.title}</div>
-                            <div class="event-meta">
-                                <span>${event.date}</span>
-                                <span class="event-time">⏱️ ${isCompleted ? completionInfo : timeStr}</span>
+                    <div class="event-card" style="background:${color}40; border-color:${color}; ${isCompleted ? 'opacity:0.7;' : ''}" onclick="openEventDetailsModal('${event.id}')"><div class="event-content"><div class="event-title">${event.title}</div><div class="event-meta"><span>${event.date}</span><span class="event-time">⏱️ ${isCompleted ? completionInfo : timeStr}</span>
                                 ${event.priority ? '<span>⭐ Priority</span>' : ''}
                                 ${event.notes ? '<span>📝 Notes</span>' : ''}
-                            </div>
-                        </div>
-                        <div class="event-actions" onclick="event.stopPropagation();">
+                            </div></div><div class="event-actions" onclick="event.stopPropagation();">
                             ${isCompleted ? `<button class="event-btn done" onclick="app.toggleComplete('${event.id}'); app.renderAll();" style="flex:1; background:#10b98120; color:#10b981;">↩️ Undo</button>` : ''}
-                        </div>
-                    </div>
+                        </div></div>
                 `;
             },
 
@@ -2284,7 +2058,7 @@
                 if (!dashboardPage || !dashboardPage.classList.contains('active')) {
                     return; // Skip rendering if not active
                 }
-                
+
                 const displayMonth = this.currentMonth || new Date();
                 const year = displayMonth.getFullYear();
                 const month = displayMonth.getMonth();
@@ -2295,14 +2069,7 @@
                 const today = new Date();
 
                 let html = `
-                    <div class="calendar-header">
-                        <h2>${firstDay.toLocaleString('default', { month: 'long', year: 'numeric' })}</h2>
-                        <div class="calendar-nav">
-                            <button class="btn btn-secondary btn-small" onclick="app.prevMonth()">← Prev</button>
-                            <button class="btn btn-secondary btn-small" onclick="app.nextMonth()">Next →</button>
-                        </div>
-                    </div>
-                    <div class="calendar-grid">
+                    <div class="calendar-header"><h2>${firstDay.toLocaleString('default', { month: 'long', year: 'numeric' })}</h2><div class="calendar-nav"><button class="btn btn-secondary btn-small" onclick="app.prevMonth()">← Prev</button><button class="btn btn-secondary btn-small" onclick="app.nextMonth()">Next →</button></div></div><div class="calendar-grid">
                 `;
 
                 const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
@@ -2317,29 +2084,25 @@
                 for (let day = 1; day <= daysInMonth; day++) {
                     const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
                     let dayEvents = this.events.filter(e => e.date === dateStr && !e.completed);
-                    
+
                     // Sort by urgency (most urgent first)
                     dayEvents.sort((a, b) => {
                         const timeA = new Date(`${a.date}T${a.time}`);
                         const timeB = new Date(`${b.date}T${b.time}`);
                         return timeA - timeB;
                     });
-                    
+
                     const isToday = dateStr === today.toISOString().split('T')[0];
 
-                    html += `<div class="calendar-date ${isToday ? 'today' : ''}" onclick="openDateEventsModal('${dateStr}')">
-                        <div class="calendar-date-number">${day}</div>
-                        <div class="calendar-date-events">
+                    html += `<div class="calendar-date ${isToday ? 'today' : ''}" onclick="openDateEventsModal('${dateStr}')"><div class="calendar-date-number">${day}</div><div class="calendar-date-events">
                             ${dayEvents.slice(0, 3).map(e => {
                                 const eventTime = new Date(`${e.date}T${e.time}`);
                                 const color = this.getUrgencyColor(eventTime - new Date());
-                                return `<div class="calendar-event-item" style="background:${color}80; border-left:3px solid ${color};">
-                                    <span style="display:inline-block; width:6px; height:6px; background:${color}; border-radius:50%; margin-right:3px;"></span>${e.title.substring(0, 14)}
+                                return `<div class="calendar-event-item" style="background:${color}80; border-left:3px solid ${color};"><span style="display:inline-block; width:6px; height:6px; background:${color}; border-radius:50%; margin-right:3px;"></span>${e.title.substring(0, 14)}
                                 </div>`;
                             }).join('')}
                             ${dayEvents.length > 3 ? `<div style="color:#cbd5e1; font-size:0.6rem; padding:0.2rem;">+${dayEvents.length - 3} more</div>` : ''}
-                        </div>
-                    </div>`;
+                        </div></div>`;
                 }
 
                 html += '</div>';
@@ -2363,7 +2126,7 @@
             },
 
             startAutoUpdate() {
-                setInterval(() => this.renderAll(), 60000); // Update every minute
+                setInterval(() => this.renderAll(), 120000); // Update every minute
             },
 
             // ── EISENHOWER MATRIX ──
@@ -2393,12 +2156,12 @@
                 if (!dashboardPage || !dashboardPage.classList.contains('active')) {
                     return; // Skip rendering if not active
                 }
-                
+
                 const container = document.getElementById('matrixContainer');
                 if (!container) return;
 
                 const events = this.events.filter(e => !e.completed);
-                
+
                 if (events.length === 0) {
                     container.innerHTML = `<div class="empty-state" style="padding:3rem;"><div class="empty-state-icon">✓</div><p>No events to display</p></div>`;
                     return;
@@ -2442,70 +2205,15 @@
                     });
 
                     let html = `
-                        <div class="matrix-plot">
-                            <!-- Schedule: Top Left -->
-                            <div class="matrix-quadrant-box schedule" style="grid-column:1; grid-row:1;">
-                                <div class="matrix-quad-header">
-                                    <span>🔵 Schedule</span>
-                                    <span class="matrix-quad-count">${quadrants.schedule.length}</span>
-                                </div>
-                                <div class="matrix-events-container">
+                        <div class="matrix-plot"><div class="matrix-quadrant-box schedule" style="grid-column:1; grid-row:1;"><div class="matrix-quad-header"><span>🔵 Schedule</span><span class="matrix-quad-count">${quadrants.schedule.length}</span></div><div class="matrix-events-container">
                                     ${this.renderQuadrantEvents(quadrants.schedule)}
-                                </div>
-                            </div>
-
-                            <!-- Do First: Top Right -->
-                            <div class="matrix-quadrant-box do-first" style="grid-column:2; grid-row:1;">
-                                <div class="matrix-quad-header">
-                                    <span>🔴 Do First</span>
-                                    <span class="matrix-quad-count">${quadrants.doFirst.length}</span>
-                                </div>
-                                <div class="matrix-events-container">
+                                </div></div><div class="matrix-quadrant-box do-first" style="grid-column:2; grid-row:1;"><div class="matrix-quad-header"><span>🔴 Do First</span><span class="matrix-quad-count">${quadrants.doFirst.length}</span></div><div class="matrix-events-container">
                                     ${this.renderQuadrantEvents(quadrants.doFirst)}
-                                </div>
-                            </div>
-
-                            <!-- Eliminate: Bottom Left -->
-                            <div class="matrix-quadrant-box eliminate" style="grid-column:1; grid-row:2;">
-                                <div class="matrix-quad-header">
-                                    <span>⚪ Eliminate</span>
-                                    <span class="matrix-quad-count">${quadrants.eliminate.length}</span>
-                                </div>
-                                <div class="matrix-events-container">
+                                </div></div><div class="matrix-quadrant-box eliminate" style="grid-column:1; grid-row:2;"><div class="matrix-quad-header"><span>⚪ Eliminate</span><span class="matrix-quad-count">${quadrants.eliminate.length}</span></div><div class="matrix-events-container">
                                     ${this.renderQuadrantEvents(quadrants.eliminate)}
-                                </div>
-                            </div>
-
-                            <!-- Delegate: Bottom Right -->
-                            <div class="matrix-quadrant-box delegate" style="grid-column:2; grid-row:2;">
-                                <div class="matrix-quad-header">
-                                    <span>🟠 Delegate</span>
-                                    <span class="matrix-quad-count">${quadrants.delegate.length}</span>
-                                </div>
-                                <div class="matrix-events-container">
+                                </div></div><div class="matrix-quadrant-box delegate" style="grid-column:2; grid-row:2;"><div class="matrix-quad-header"><span>🟠 Delegate</span><span class="matrix-quad-count">${quadrants.delegate.length}</span></div><div class="matrix-events-container">
                                     ${this.renderQuadrantEvents(quadrants.delegate)}
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="matrix-legend">
-                            <div class="matrix-legend-item">
-                                <div class="matrix-legend-color" style="background:#ef4444;"></div>
-                                <span>Do First</span>
-                            </div>
-                            <div class="matrix-legend-item">
-                                <div class="matrix-legend-color" style="background:#3b82f6;"></div>
-                                <span>Schedule</span>
-                            </div>
-                            <div class="matrix-legend-item">
-                                <div class="matrix-legend-color" style="background:#fb923c;"></div>
-                                <span>Delegate</span>
-                            </div>
-                            <div class="matrix-legend-item">
-                                <div class="matrix-legend-color" style="background:#6b7280;"></div>
-                                <span>Eliminate</span>
-                            </div>
-                        </div>
+                                </div></div></div><div class="matrix-legend"><div class="matrix-legend-item"><div class="matrix-legend-color" style="background:#ef4444;"></div><span>Do First</span></div><div class="matrix-legend-item"><div class="matrix-legend-color" style="background:#3b82f6;"></div><span>Schedule</span></div><div class="matrix-legend-item"><div class="matrix-legend-color" style="background:#fb923c;"></div><span>Delegate</span></div><div class="matrix-legend-item"><div class="matrix-legend-color" style="background:#6b7280;"></div><span>Eliminate</span></div></div>
                     `;
 
                     container.innerHTML = html;
@@ -2529,7 +2237,7 @@
                     const eventTime = new Date(`${event.date}T${event.time}`);
                     const color = this.getUrgencyColor(eventTime - new Date());
                     const timeStr = this.formatTimeRemaining(eventTime - new Date());
-                    
+
                     html += `<div class="matrix-event-badge" style="background:${color}80; border-left:3px solid ${color};" onclick="openEventDetailsModal('${event.id}')"><div class="matrix-event-badge-title">${event.title.substring(0, 16)}</div><div class="matrix-event-badge-time">⏱️ ${timeStr}</div></div>`;
                 }
 
@@ -2548,7 +2256,7 @@
             document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
             document.getElementById(`${page}-page`).classList.add('active');
             document.querySelector(`[data-page="${page}"]`).classList.add('active');
-            
+
             // Render the page if it's dashboard or specific pages that need deferred rendering
             if (page === 'dashboard' || page === 'calendar' || page === 'matrix') {
                 app.renderAll();
@@ -2630,12 +2338,9 @@
 
             const grid = document.getElementById('paletteGrid');
             grid.innerHTML = schemes.map(scheme => `
-                <div class="palette-option ${app.settings.colorScheme === scheme ? 'active' : ''}" onclick="selectPalette('${scheme}')">
-                    <div class="palette-preview">
+                <div class="palette-option ${app.settings.colorScheme === scheme ? 'active' : ''}" onclick="selectPalette('${scheme}')"><div class="palette-preview">
                         ${colors[scheme].map(c => `<div class="palette-preview-color" style="background:${c}"></div>`).join('')}
-                    </div>
-                    <div class="palette-name">${scheme.charAt(0).toUpperCase() + scheme.slice(1)}</div>
-                </div>
+                    </div><div class="palette-name">${scheme.charAt(0).toUpperCase() + scheme.slice(1)}</div></div>
             `).join('');
         }
 
@@ -2674,7 +2379,7 @@
         // Parse notes and convert URLs to clickable links
         function parseNotesWithLinks(text) {
             if (!text) return '';
-            
+
             // Regex to match URLs
             const urlRegex = /(https?:\/\/[^\s]+)/g;
             return text.replace(urlRegex, '<a href="$1" target="_blank" style="color:#3b82f6; text-decoration:underline; font-weight:500;">$1</a>')
@@ -2684,22 +2389,22 @@
         function openDateEventsModal(dateStr) {
             selectedDateForModal = dateStr;
             const date = new Date(dateStr);
-            const dateFormatted = date.toLocaleDateString('en-US', { 
-                weekday: 'long', 
-                year: 'numeric', 
-                month: 'long', 
-                day: 'numeric' 
+            const dateFormatted = date.toLocaleDateString('en-US', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
             });
-            
+
             document.getElementById('dateEventsTitle').textContent = `Events for ${dateFormatted}`;
-            
+
             const dayEvents = app.events.filter(e => e.date === dateStr && !e.completed)
                 .sort((a, b) => {
                     const timeA = new Date(`${a.date}T${a.time}`);
                     const timeB = new Date(`${b.date}T${b.time}`);
                     return timeA - timeB;
                 });
-            
+
             let eventsHtml = '';
             if (dayEvents.length === 0) {
                 eventsHtml = '<div style="color:#cbd5e1; padding:1rem; text-align:center;">No events for this date</div>';
@@ -2708,28 +2413,19 @@
                     const eventTime = new Date(`${event.date}T${event.time}`);
                     const color = app.getUrgencyColor(eventTime - new Date());
                     const timeRemaining = app.formatTimeRemaining(eventTime - new Date());
-                    
+
                     return `
-                        <div style="background:#1e293b; border:1px solid #334155; border-left:4px solid ${color}; padding:0.75rem 1rem; border-radius:0.5rem; margin-bottom:0.5rem; cursor:pointer; transition:all 0.2s ease;" 
-                             onmouseover="this.style.background='#1f2937'" 
+                        <div style="background:#1e293b; border:1px solid #334155; border-left:4px solid ${color}; padding:0.75rem 1rem; border-radius:0.5rem; margin-bottom:0.5rem; cursor:pointer; transition:all 0.2s ease;"
+                             onmouseover="this.style.background='#1f2937'"
                              onmouseout="this.style.background='#1e293b'"
-                             onclick="openEventDetailsModal('${event.id}')">
-                            <div style="display:flex; justify-content:space-between; align-items:center; gap:0.75rem;">
-                                <div style="flex:1; min-width:0;">
-                                    <div style="font-weight:600; color:#f1f5f9; margin-bottom:0.25rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${event.title}</div>
-                                    <div style="font-size:0.85rem; color:#cbd5e1; display:flex; gap:0.5rem; align-items:center;">
-                                        <span>🕐 ${event.time}</span>
-                                        <span>⏱️ ${timeRemaining}</span>
+                             onclick="openEventDetailsModal('${event.id}')"><div style="display:flex; justify-content:space-between; align-items:center; gap:0.75rem;"><div style="flex:1; min-width:0;"><div style="font-weight:600; color:#f1f5f9; margin-bottom:0.25rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${event.title}</div><div style="font-size:0.85rem; color:#cbd5e1; display:flex; gap:0.5rem; align-items:center;"><span>🕐 ${event.time}</span><span>⏱️ ${timeRemaining}</span>
                                         ${event.priority ? '<span style="background:#fb923c20; color:#fb923c; padding:0.15rem 0.4rem; border-radius:0.2rem; font-size:0.75rem; white-space:nowrap;">⭐ Priority</span>' : ''}
                                         ${event.notes ? '<span style="color:#60a5fa; font-size:0.75rem;">📝 Notes</span>' : ''}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                                    </div></div></div></div>
                     `;
                 }).join('');
             }
-            
+
             document.getElementById('dateEventsList').innerHTML = eventsHtml;
             document.getElementById('dateEventsModal').classList.add('active');
         }
@@ -2741,7 +2437,7 @@
 
         function openAddEventModalForDate() {
             if (!selectedDateForModal) return;
-            
+
             app.currentEditingId = null;
             document.getElementById('modalTitle').textContent = 'Add Event';
             document.getElementById('eventTitle').value = '';
@@ -2749,7 +2445,7 @@
             document.getElementById('eventTime').value = '09:00';
             document.getElementById('eventPriority').checked = false;
             document.getElementById('eventNotes').value = '';
-            
+
             closeDateEventsModal();
             document.getElementById('eventModal').classList.add('active');
         }
@@ -2761,18 +2457,13 @@
             if (!event) return;
 
             document.getElementById('detailsTitle').textContent = event.title;
-            
+
             const eventTime = new Date(`${event.date}T${event.time}`);
             const timeRemaining = app.formatTimeRemaining(eventTime - new Date());
             const color = app.getUrgencyColor(eventTime - new Date());
 
             let detailsHtml = `
-                <div style="margin-bottom:1rem;">
-                    <div style="font-size:0.9rem; color:#cbd5e1; margin-bottom:0.75rem;">
-                        <div>📅 ${event.date} | 🕐 ${event.time}</div>
-                        <div style="margin-top:0.5rem;">⏱️ <strong>${timeRemaining}</strong></div>
-                    </div>
-                </div>
+                <div style="margin-bottom:1rem;"><div style="font-size:0.9rem; color:#cbd5e1; margin-bottom:0.75rem;"><div>📅 ${event.date} | 🕐 ${event.time}</div><div style="margin-top:0.5rem;">⏱️ <strong>${timeRemaining}</strong></div></div></div>
             `;
 
             if (event.priority) {
@@ -2781,28 +2472,21 @@
 
             if (event.notes) {
                 detailsHtml += `
-                    <div style="margin-top:1rem; padding-top:1rem; border-top:1px solid #334155;">
-                        <h4 style="color:#f1f5f9; margin-bottom:0.75rem;">📝 Notes:</h4>
-                        <div style="background:rgba(0,0,0,0.2); padding:1rem; border-radius:0.5rem; color:#cbd5e1; line-height:1.6;">
+                    <div style="margin-top:1rem; padding-top:1rem; border-top:1px solid #334155;"><h4 style="color:#f1f5f9; margin-bottom:0.75rem;">📝 Notes:</h4><div style="background:rgba(0,0,0,0.2); padding:1rem; border-radius:0.5rem; color:#cbd5e1; line-height:1.6;">
                             ${parseNotesWithLinks(event.notes)}
-                        </div>
-                    </div>
+                        </div></div>
                 `;
             }
 
             // Add action buttons section
             detailsHtml += `
-                <div style="margin-top:1.5rem; padding-top:1rem; border-top:1px solid #334155; display:flex; gap:0.75rem; flex-wrap:wrap;">
-                    <button class="btn btn-primary btn-small" onclick="editEventFromDetails()" style="flex:1; min-width:100px;">
+                <div style="margin-top:1.5rem; padding-top:1rem; border-top:1px solid #334155; display:flex; gap:0.75rem; flex-wrap:wrap;"><button class="btn btn-primary btn-small" onclick="editEventFromDetails()" style="flex:1; min-width:100px;">
                         ✏️ Edit
-                    </button>
-                    <button class="btn btn-small" style="background:#10b98120; color:#10b981; border:1px solid #10b981; flex:1; min-width:100px;" onclick="completeEventFromDetails()">
+                    </button><button class="btn btn-small" style="background:#10b98120; color:#10b981; border:1px solid #10b981; flex:1; min-width:100px;" onclick="completeEventFromDetails()">
                         ✓ Mark Done
-                    </button>
-                    <button class="btn btn-small" style="background:#ef444420; color:#ef4444; border:1px solid #ef4444; flex:1; min-width:100px;" onclick="deleteEventFromDetails()">
+                    </button><button class="btn btn-small" style="background:#ef444420; color:#ef4444; border:1px solid #ef4444; flex:1; min-width:100px;" onclick="deleteEventFromDetails()">
                         🗑️ Delete
-                    </button>
-                </div>
+                    </button></div>
             `;
 
             const detailsDiv = document.getElementById('detailsContent');
@@ -2841,25 +2525,22 @@
         function showMatrixEventsModal(eventIds, totalCount) {
             const ids = eventIds.split(',');
             const events = ids.map(id => app.events.find(e => e.id === id)).filter(e => e);
-            
+
             const title = document.getElementById('matrixEventsTitle');
             title.textContent = `All Events (${totalCount} total)`;
-            
+
             let eventsHtml = events.map(event => {
                 const eventTime = new Date(`${event.date}T${event.time}`);
                 const color = app.getUrgencyColor(eventTime - new Date());
                 const timeRemaining = app.formatTimeRemaining(eventTime - new Date());
-                
+
                 return `
-                    <div style="background:${color}20; border-left:3px solid ${color}; padding:0.75rem; border-radius:0.5rem; margin-bottom:0.75rem; cursor: pointer;" onclick="openEventDetailsModal('${event.id}'); closeMatrixEventsModal();">
-                        <div style="font-weight: 600; color: #f1f5f9; margin-bottom:0.4rem;">${event.title}</div>
-                        <div style="font-size:0.85rem; color:#cbd5e1;">📅 ${event.date} | 🕐 ${event.time}</div>
-                        <div style="font-size:0.85rem; color:#cbd5e1; margin-top:0.3rem;">⏱️ ${timeRemaining}</div>
+                    <div style="background:${color}20; border-left:3px solid ${color}; padding:0.75rem; border-radius:0.5rem; margin-bottom:0.75rem; cursor: pointer;" onclick="openEventDetailsModal('${event.id}'); closeMatrixEventsModal();"><div style="font-weight: 600; color: #f1f5f9; margin-bottom:0.4rem;">${event.title}</div><div style="font-size:0.85rem; color:#cbd5e1;">📅 ${event.date} | 🕐 ${event.time}</div><div style="font-size:0.85rem; color:#cbd5e1; margin-top:0.3rem;">⏱️ ${timeRemaining}</div>
                         ${event.priority ? '<div style="display:inline-block; background:#fb923c20; color:#fb923c; padding:0.25rem 0.5rem; border-radius:0.3rem; font-size:0.8rem; margin-top:0.3rem;">⭐ Priority</div>' : ''}
                     </div>
                 `;
             }).join('');
-            
+
             document.getElementById('matrixEventsList').innerHTML = eventsHtml;
             document.getElementById('matrixEventsModal').classList.add('active');
         }
@@ -2870,6 +2551,4 @@
 
         // ── INIT ──
         window.addEventListener('DOMContentLoaded', () => app.init());
-    </script>
-</body>
-</html>
+    </script></body></html>
