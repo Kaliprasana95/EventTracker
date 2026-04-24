@@ -977,6 +977,26 @@
         }
 
         /* ════════════════════════════════════════════════════ RESPONSIVE */
+        /* ════════════════════════════════════════════════════ DASHBOARD GRID */
+        #dashboard-page > div:nth-child(2) {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            width: 100%;
+        }
+
+        #dashboard-page > div:nth-child(2) > div {
+            width: 100%;
+            min-width: 0;
+        }
+
+        @media (max-width: 768px) {
+            #dashboard-page > div:nth-child(2) {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+        }
+
         @media (max-width: 768px) {
             body {
                 font-size: 14px;
@@ -1524,11 +1544,9 @@
         <!-- NAV TABS -->
         <div class="nav-tabs">
             <button class="nav-tab active" data-page="priority" onclick="switchPage('priority')">⭐ Priority</button>
-            <button class="nav-tab" data-page="non-priority" onclick="switchPage('non-priority')">📋 Non-Priority</button>
             <button class="nav-tab" data-page="all" onclick="switchPage('all')">🎯 All Events</button>
             <button class="nav-tab" data-page="completed" onclick="switchPage('completed')">✓ Done</button>
-            <button class="nav-tab" data-page="matrix" onclick="switchPage('matrix')">📊 Matrix</button>
-            <button class="nav-tab" data-page="calendar" onclick="switchPage('calendar')">📆 Calendar</button>
+            <button class="nav-tab" data-page="dashboard" onclick="switchPage('dashboard')">📊 Dashboard</button>
         </div>
 
         <!-- CONTENT -->
@@ -1542,16 +1560,7 @@
                 <div class="events-list" id="priority-list"></div>
             </div>
 
-            <!-- NON-PRIORITY PAGE -->
-            <div class="page" id="non-priority-page" data-page="non-priority">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem;">
-                    <h2>Non-Priority Events</h2>
-                    <button class="btn btn-primary" onclick="openAddEventModal()">+ Add Event</button>
-                </div>
-                <div class="events-list" id="non-priority-list"></div>
-            </div>
-
-            <!-- ALL PAGE -->
+            <!-- ALL EVENTS PAGE -->
             <div class="page" id="all-page" data-page="all">
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem;">
                     <h2>All Events</h2>
@@ -1569,22 +1578,28 @@
                 <div class="events-list" id="completed-list"></div>
             </div>
 
-            <!-- MATRIX PAGE -->
-            <div class="page" id="matrix-page" data-page="matrix">
-                <div style="margin-bottom:1.5rem;">
-                    <h2>Eisenhower Matrix 📊</h2>
-                    <p style="color:#cbd5e1; font-size:0.9rem; margin-top:0.5rem;">Organized by urgency (time remaining) and your importance rating</p>
-                </div>
-                <div id="matrixContainer"></div>
-            </div>
+            <!-- DASHBOARD PAGE (Matrix + Calendar) -->
+            <div class="page" id="dashboard-page" data-page="dashboard">
+                <h2 style="margin-bottom:1.5rem;">Dashboard</h2>
+                <div style="display:grid; grid-template-columns:1fr; gap:2rem; width:100%;">
+                    <!-- MATRIX SECTION -->
+                    <div style="width:100%;">
+                        <div style="margin-bottom:1.5rem;">
+                            <h3 style="color:#f1f5f9; font-size:1.2rem; margin-bottom:0.5rem;">Eisenhower Matrix 📊</h3>
+                            <p style="color:#cbd5e1; font-size:0.9rem;">Organized by urgency (time remaining) and your importance rating</p>
+                        </div>
+                        <div id="matrixContainer"></div>
+                    </div>
 
-            <!-- CALENDAR PAGE -->
-            <div class="page" id="calendar-page" data-page="calendar">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem;">
-                    <h2>Calendar View</h2>
-                    <button class="btn btn-primary" onclick="openAddEventModal()">+ Add Event</button>
+                    <!-- CALENDAR SECTION -->
+                    <div style="width:100%;">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem;">
+                            <h3 style="color:#f1f5f9; font-size:1.2rem;">Calendar View 📆</h3>
+                            <button class="btn btn-primary btn-small" onclick="openAddEventModal()">+ Add Event</button>
+                        </div>
+                        <div class="calendar-container" id="calendar-container"></div>
+                    </div>
                 </div>
-                <div class="calendar-container" id="calendar-container"></div>
             </div>
         </div>
     </div>
@@ -2018,7 +2033,6 @@
                     
                     // Only render active tab and event lists immediately
                     this.renderEventList('priority');
-                    this.renderEventList('non-priority');
                     this.renderEventList('all');
                     this.renderEventList('completed');
                     
@@ -2079,24 +2093,32 @@
                 const color = this.getUrgencyColor(diff);
                 const timeStr = this.formatTimeRemaining(diff);
 
+                // Calculate days before/after deadline for completed events
+                let completionInfo = '';
+                if (isCompleted) {
+                    const daysBeforeDeadline = Math.round(diff / (1000 * 60 * 60 * 24));
+                    if (daysBeforeDeadline > 0) {
+                        completionInfo = `✅ Completed ${daysBeforeDeadline} day${daysBeforeDeadline !== 1 ? 's' : ''} before deadline`;
+                    } else if (daysBeforeDeadline < 0) {
+                        completionInfo = `✅ Completed ${Math.abs(daysBeforeDeadline)} day${Math.abs(daysBeforeDeadline) !== 1 ? 's' : ''} after deadline`;
+                    } else {
+                        completionInfo = `✅ Completed on deadline`;
+                    }
+                }
+
                 return `
                     <div class="event-card" style="background:${color}40; border-color:${color}; ${isCompleted ? 'opacity:0.7;' : ''}" onclick="openEventDetailsModal('${event.id}')">
                         <div class="event-content">
                             <div class="event-title">${event.title}</div>
                             <div class="event-meta">
                                 <span>${event.date}</span>
-                                <span class="event-time">⏱️ ${timeStr}</span>
+                                <span class="event-time">⏱️ ${isCompleted ? completionInfo : timeStr}</span>
                                 ${event.priority ? '<span>⭐ Priority</span>' : ''}
                                 ${event.notes ? '<span>📝 Notes</span>' : ''}
                             </div>
                         </div>
                         <div class="event-actions" onclick="event.stopPropagation();">
-                            ${isCompleted ? `<button class="event-btn done" onclick="app.toggleComplete('${event.id}'); app.renderAll();" style="flex:1; background:#10b98120; color:#10b981;">↩️ Undo</button>` : `
-                                <button class="event-btn" onclick="app.togglePriority('${event.id}')">⭐</button>
-                                <button class="event-btn done" onclick="app.toggleComplete('${event.id}')">✓</button>
-                                <button class="event-btn" onclick="openEditEventModal('${event.id}')">✏️</button>
-                                <button class="event-btn" onclick="app.deleteEvent('${event.id}')">🗑️</button>
-                            `}
+                            ${isCompleted ? `<button class="event-btn done" onclick="app.toggleComplete('${event.id}'); app.renderAll();" style="flex:1; background:#10b98120; color:#10b981;">↩️ Undo</button>` : `<div style="font-size:0.75rem; color:#64748b;">Click to edit</div>`}
                         </div>
                     </div>
                 `;
@@ -2646,25 +2668,22 @@
                     const timeRemaining = app.formatTimeRemaining(eventTime - new Date());
                     
                     return `
-                        <div style="background:#1e293b; border:1px solid #334155; border-left:4px solid ${color}; padding:1rem; border-radius:0.5rem; margin-bottom:0.75rem; cursor:pointer; transition:all 0.2s ease;" 
+                        <div style="background:#1e293b; border:1px solid #334155; border-left:4px solid ${color}; padding:0.75rem 1rem; border-radius:0.5rem; margin-bottom:0.5rem; cursor:pointer; transition:all 0.2s ease;" 
                              onmouseover="this.style.background='#1f2937'" 
                              onmouseout="this.style.background='#1e293b'"
                              onclick="openEventDetailsModal('${event.id}')">
-                            <div style="display:flex; justify-content:space-between; align-items:start; gap:1rem;">
-                                <div style="flex:1;">
-                                    <div style="font-weight:600; color:#f1f5f9; margin-bottom:0.5rem;">${event.title}</div>
-                                    <div style="font-size:0.9rem; color:#cbd5e1; margin-bottom:0.5rem;">
-                                        🕐 ${event.time} | ⏱️ ${timeRemaining}
+                            <div style="display:flex; justify-content:space-between; align-items:center; gap:0.75rem;">
+                                <div style="flex:1; min-width:0;">
+                                    <div style="font-weight:600; color:#f1f5f9; margin-bottom:0.25rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${event.title}</div>
+                                    <div style="font-size:0.85rem; color:#cbd5e1; display:flex; gap:0.5rem; align-items:center;">
+                                        <span>🕐 ${event.time}</span>
+                                        <span>⏱️ ${timeRemaining}</span>
+                                        ${event.priority ? '<span style="background:#fb923c20; color:#fb923c; padding:0.15rem 0.4rem; border-radius:0.2rem; font-size:0.75rem; white-space:nowrap;">⭐ Priority</span>' : ''}
+                                        ${event.notes ? '<span style="color:#60a5fa; font-size:0.75rem;">📝 Notes</span>' : ''}
                                     </div>
-                                    ${event.priority ? '<div style="display:inline-block; background:#fb923c20; color:#fb923c; padding:0.25rem 0.75rem; border-radius:0.3rem; font-size:0.8rem;">⭐ Priority</div>' : ''}
-                                    ${event.notes ? '<div style="font-size:0.8rem; color:#cbd5e1; margin-top:0.5rem; padding-top:0.5rem; border-top:1px solid #334155;">📝 Click to see notes</div>' : ''}
-                                </div>
-                                <div style="display:flex; gap:0.5rem;" onclick="event.stopPropagation();">
-                                    <button class="event-btn" onclick="openEditEventModal('${event.id}'); closeDateEventsModal();">✏️</button>
-                                    <button class="event-btn done" onclick="app.toggleComplete('${event.id}'); openDateEventsModal('${dateStr}');">✓</button>
-                                    <button class="event-btn" onclick="app.deleteEvent('${event.id}'); openDateEventsModal('${dateStr}');">🗑️</button>
                                 </div>
                             </div>
+                            <div style="font-size:0.7rem; color:#64748b; margin-top:0.25rem;">Click to edit/delete</div>
                         </div>
                     `;
                 }).join('');
@@ -2729,6 +2748,21 @@
                     </div>
                 `;
             }
+
+            // Add action buttons section
+            detailsHtml += `
+                <div style="margin-top:1.5rem; padding-top:1rem; border-top:1px solid #334155; display:flex; gap:0.75rem; flex-wrap:wrap;">
+                    <button class="btn btn-primary btn-small" onclick="editEventFromDetails()" style="flex:1; min-width:100px;">
+                        ✏️ Edit
+                    </button>
+                    <button class="btn btn-small" style="background:#10b98120; color:#10b981; border:1px solid #10b981; flex:1; min-width:100px;" onclick="completeEventFromDetails()">
+                        ✓ Mark Done
+                    </button>
+                    <button class="btn btn-small" style="background:#ef444420; color:#ef4444; border:1px solid #ef4444; flex:1; min-width:100px;" onclick="deleteEventFromDetails()">
+                        🗑️ Delete
+                    </button>
+                </div>
+            `;
 
             const detailsDiv = document.getElementById('detailsContent');
             detailsDiv.innerHTML = detailsHtml;
