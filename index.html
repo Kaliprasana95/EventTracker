@@ -1567,6 +1567,7 @@
                 <span>Event Tracker</span>
             </h1>
             <div class="header-controls">
+                <button class="btn btn-secondary btn-small" onclick="app.renderAll()" title="Refresh">🔄</button>
                 <div class="sync-status" id="syncStatus" title="Sync status" style="min-width: fit-content;">
                     <span class="status-indicator offline" id="syncDot"></span>
                 </div>
@@ -2278,9 +2279,9 @@
             },
 
             renderCalendar() {
-                // Check if calendar tab is visible
-                const calendarPage = document.getElementById('calendar-page');
-                if (!calendarPage || !calendarPage.classList.contains('active')) {
+                // Check if dashboard tab is visible
+                const dashboardPage = document.getElementById('dashboard-page');
+                if (!dashboardPage || !dashboardPage.classList.contains('active')) {
                     return; // Skip rendering if not active
                 }
                 
@@ -2387,9 +2388,9 @@
             },
 
             renderMatrix() {
-                // Check if matrix tab is visible
-                const matrixPage = document.getElementById('matrix-page');
-                if (!matrixPage || !matrixPage.classList.contains('active')) {
+                // Check if dashboard tab is visible
+                const dashboardPage = document.getElementById('dashboard-page');
+                if (!dashboardPage || !dashboardPage.classList.contains('active')) {
                     return; // Skip rendering if not active
                 }
                 
